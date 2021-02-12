@@ -350,7 +350,7 @@ export default {
           this.bgImageUrl = this.user.bgImage
           this.secretBirthday = this.user.secretBirthday
           if(this.user.imageUrl){
-            this.imageUrl = this.user.imageUrl
+          this.imageUrl = this.user.imageUrl
           }
         }
       })
