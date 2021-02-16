@@ -19,7 +19,7 @@
         <v-avatar size="164" rounded="10" class="avatar">
           <v-img width="200px" :src="imageUrl"></v-img>
         </v-avatar>
-        <div class="ul-avatar pt-2">
+        <div class="ul-avatar pt-2 mt-2">
           <v-file-input type="file" @change="uploadIconFile" accept="image/*" show-size small-chips label="アイコン画像を選択" :clearable="false"></v-file-input>
           <v-file-input v-if="isBackground" type="file" @change="uploadBgFile" accept="image/*" show-size small-chips label="背景画像を選択" :clearable="false"></v-file-input>
           <v-checkbox class="pb-2" dense messages="設定しない場合、すでに設定済みの背景は削除されます" v-model="isBackground" label="背景画像を設定する"></v-checkbox>
@@ -134,7 +134,11 @@
               </v-chip>
             </draggable>
             <p class="caption pt-3">ドラッグで並び替えが可能です</p>
+            <v-icon small>mdi-transfer-up</v-icon>
             <v-form class="inputs" v-model="formFav" ref="formFav">
+            <v-chip class="mb-2" :color="selectedColor" text-color="#f9f9f9" v-show="favorite">
+                {{ favorite }}
+              </v-chip>
               <v-text-field
                 class="inputs"
                 v-model="favorite"
@@ -144,7 +148,10 @@
                 dense
                 rounded
               ></v-text-field>
-              <v-btn @click="addFavorite" :disabled="!formFav">Add</v-btn>
+              <v-col>
+                <v-btn color="primary" @click="addFavorite" :disabled="!formFav">Add</v-btn>
+              </v-col>
+              <v-chip @click="resetFavForm" small outlined>reset</v-chip>
             </v-form>
           </div>
         </div>
@@ -259,7 +266,7 @@
                   outlined
                 ></v-textarea>
                 <v-col>
-                  <v-btn @click="addCareer" :disabled="!formCareer">Add</v-btn>
+                  <v-btn color="primary" @click="addCareer" :disabled="!formCareer">Add</v-btn>
                 </v-col>
                 <v-chip @click="resetCareerForm" small outlined>reset</v-chip>
               </v-form>
@@ -307,7 +314,7 @@
                 :swatches="swatches"
               ></v-color-picker>
               <v-col class="pt-0">
-                <v-btn @click="addSkill" :disabled="!formSkill">Add</v-btn>
+                <v-btn color="primary" @click="addSkill" :disabled="!formSkill">Add</v-btn>
               </v-col>
               <v-chip @click="resetSkillForm" small outlined>reset</v-chip>
             </v-form>
@@ -322,8 +329,8 @@
           <v-icon>mdi-facebook</v-icon>
           <v-icon>mdi-twitter</v-icon>
           <v-icon>mdi-youtube</v-icon>
-          <v-icon>mdi-linkedin</v-icon>
-          <v-icon>mdi-github</v-icon>
+          <!-- <v-icon>mdi-linkedin</v-icon>
+          <v-icon>mdi-github</v-icon> -->
           <p class="caption">各サービスのURLを入力してください</p>
           <v-row class="inputs" align="center" justify="center">
             <v-col>
@@ -367,7 +374,7 @@
                 rounded
               >  
               </v-text-field>
-              <v-text-field
+              <!-- <v-text-field
                 prepend-icon="mdi-linkedin"
                 label="LinkedIn"
                 v-model="liUrl"
@@ -376,7 +383,7 @@
                 dense
                 rounded
               >  
-              </v-text-field>
+              </v-text-field> -->
               <!-- <v-text-field
                 prepend-icon="mdi-github"
                 label="GitHub"
@@ -423,7 +430,7 @@
               rounded
             ></v-text-field>
             <v-col>
-              <v-btn @click="addUrls" :disabled="!form">Add</v-btn>
+              <v-btn color="primary" @click="addUrls" :disabled="!form">Add</v-btn>
             </v-col>
             <v-chip @click="resetUrlForm" small outlined>reset</v-chip>
           </v-form>
@@ -434,7 +441,6 @@
         <div class="slide my-8">
           <h3>Works</h3>
             <v-card
-              
               max-width="600"
               class="mx-auto my-8"
               color="rgba(255, 255, 255, 0)"
@@ -510,7 +516,7 @@
                 rounded
               ></v-textarea>
               <v-col>
-                <v-btn @click="addItem" :disabled="!formSlide">Add</v-btn>
+                <v-btn color="primary" @click="addItem" :disabled="!formSlide">Add</v-btn>
               </v-col>
               <v-chip @click="reset" small outlined>reset</v-chip>
             </v-form>
@@ -563,6 +569,10 @@ export default {
       this.$refs.formSkill.reset()
       this.selectedColor = '#AAA'
     }, 
+    resetFavForm() {
+      this.$refs.formFav.reset()
+      this.selectedColor = '#AAA'
+    }, 
     resetCareerForm() {
       this.$refs.formCareer.reset()
     }, 
@@ -608,6 +618,7 @@ export default {
         alert('メールが送信されました')
       }).catch(function(error) {
         alert('エラーが発生しました')
+        console.log(error)
         // An error happened.
       });
     },
@@ -729,7 +740,6 @@ export default {
       slideText: '',
       slideUrl: '',
       slideImage: '',
-      overlay: false,
       verifyEmail: '',
       secretBirthday: true,
       isBackground: false,
@@ -800,8 +810,10 @@ export default {
       if(user) {
         this.currentUser = user.uid
 
-        if(!this.isVerifyEmail) {
+        if(!this.isVerifyEmail && user.providerData[0].providerId == 'password') {
           this.overlay = true
+        } else {
+          this.verifyEmail = true
         }
 
         let userDoc = db.collection('profs').doc(this.currentUser)
@@ -981,6 +993,7 @@ export default {
   white-space: pre-wrap;
   word-wrap:break-word;
   background-size: cover;
+  background-position: center;
   background-color: 255,255,255, 0.8;
   background-blend-mode:lighten;
 }

@@ -4,13 +4,13 @@
       <v-card rounded="xl" elevation="20" class="theme" :class="{plain: user.theme == 'plain', dark: user.theme == 'dark', smokypink: user.theme == 'smokypink'}">
         <div class="avatar-top pt-14 pb-10" align="center" :style="{ backgroundImage: `url(${bgImageUrl})` }">
         <h1 class="user-name">
-          <vue-arc-text ref="arctext" :text=user.lastname :arc=+arc :direction=direction></vue-arc-text>
+          <vue-arc-text ref="arctext" :text=user.lastname :arc=+arc :direction=direction :class="{plainname: user.theme == 'plain' && !bgImageUrl}"></vue-arc-text>
         </h1>
         <v-avatar size="164" rounded="10" class="avatar">
         <v-img width="200px" :src="imageUrl"></v-img>
         </v-avatar>
         <h1 class="user-name">
-          <vue-arc-text ref="arctext" :text=user.firstname :arc=+arc :direction=direction2></vue-arc-text>
+          <vue-arc-text ref="arctext" :text=user.firstname :arc=+arc :direction=direction2 :class="{plainname: user.theme == 'plain' && !bgImageUrl}"></vue-arc-text>
         </h1>
         <!-- <v-col class="pt-0">
           <v-chip color="#fff" label>
@@ -56,6 +56,7 @@
                   class="anchor-link body-1"
                   v-scroll-to="'.intro'"
                   to
+                  v-if="this.user.intro && this.user.intro.length"
                 >
                   <h4>AboutMe</h4>
                 </nuxt-link>
@@ -137,7 +138,7 @@
 
               <v-divider></v-divider>
 
-            <div class="intro my-10">
+            <div class="intro my-10" v-if="this.user.intro && this.user.intro.length">
               <h3>AboutMe</h3>
               <p class="body-2">{{ user.intro }}</p>
               <v-divider></v-divider>
@@ -180,12 +181,14 @@
               <a :href="user.twUrl" v-if="user.twUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#1DA1F2">mdi-twitter</v-icon>
               </a>
+                <v-icon v-else>mdi-twitter</v-icon>
+
               <a :href="user.ytUrl" v-if="user.ytUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#FF0000">mdi-youtube</v-icon>
               </a>
                 <v-icon v-else>mdi-youtube</v-icon>
 
-              <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
+              <!-- <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#2867B2">mdi-linkedin</v-icon>
               </a>
                 <v-icon v-else>mdi-linkedin</v-icon>
@@ -193,7 +196,7 @@
               <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#2867B2">mdi-github</v-icon>
               </a>
-                <v-icon v-else>mdi-github</v-icon>
+                <v-icon v-else>mdi-github</v-icon> -->
               <v-divider class="mt-10"></v-divider>
             </div>
 
@@ -230,7 +233,7 @@
                     <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
                     <div class="slide-text">
                       <p v-if="item.text && item.text.length" class="py-2 mb-0 body-2" style="color: black">
-                        {{ item.text.slice(0, 20) }}
+                        {{ item.text.slice(0, 50) }}
                         <span>
                           <v-btn v-if="item.text.length > 20" @click="slideDialogSwitch(item.id)" x-small color="primary" outlined>
                             ...詳しく
@@ -368,7 +371,6 @@ export default {
   transform: translateY(30vh) translateY(0px);
 }
 
-
 .test {
   border-radius: 20px;
   background: #E6E7EE;
@@ -379,6 +381,9 @@ export default {
 .plain {
   color: #31344B;
   background: #f9f9f9;
+}
+.plainname {
+  color: #31344B;
 }
 .dark {
   background-color: #3a4164;
@@ -429,6 +434,7 @@ a:active {
   white-space: pre-wrap;
   word-wrap:break-word;
   background-size: cover;
+  background-position: center;
   background-color: 255,255,255, 0.8;
   background-blend-mode:lighten;
 }
@@ -450,7 +456,9 @@ a:active {
 }
 
 .user-name {
-  font-size: 42px;
+  font-size: 32px;
+  color: #fff;
+  font-family: Futura;
 }
 
 </style>

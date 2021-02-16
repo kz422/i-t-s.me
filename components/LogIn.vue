@@ -44,32 +44,64 @@
             <nuxt-link to="resister">
               <p class="caption mb-1 mt-2" v-if="unuser">アカウントをお持ちではないですか？</p>
             </nuxt-link>
-
           </v-col>
-          <v-col cols="12" class="mt-6">
-            <v-btn v-if="!isAuthenticated" @click="login" depressed width="200" class="login-btn" color="red">
-              <v-icon x-small left color="#fff">mdi-google</v-icon>
-              <v-divider vertical class="mr-6"></v-divider>
-              Googleでログイン
-            </v-btn>
-          </v-col>
-          <v-col cols="12">
-            <v-btn v-if="!isAuthenticated" @click="loginWithTwitter" depressed width="200" class="login-btn" color="blue">
-              <v-icon x-small left color="#fff">mdi-twitter</v-icon>
-              <v-divider vertical class="mr-5"></v-divider>
-              Twitterでログイン
-            </v-btn>
-          </v-col>
-          <v-col cols="12">
-            <v-btn v-if="!isAuthenticated" @click="loginWithFacebook" depressed width="200" class="login-btn" color="#4267B2">
-              <v-icon x-small left color="#fff">mdi-facebook</v-icon>
-              <v-divider vertical class="mr-3"></v-divider>
-              <span>Facebookでログイン</span>
-            </v-btn>
-          </v-col>
+          <!-- モバイル表示 -->
+          <div v-if="$vuetify.breakpoint.smAndDown" class="login-m mx-auto">
+            <v-col cols="12" class="mt-6">
+              <v-btn v-if="!isAuthenticated" @click="login" depressed width="200" class="login-btn" color="red">
+                <v-icon x-small left color="#fff">mdi-google</v-icon>
+                <v-divider vertical class="mr-6"></v-divider>
+                Googleでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithTwitter" depressed width="200" class="login-btn" color="blue">
+                <v-icon x-small left color="#fff">mdi-twitter</v-icon>
+                <v-divider vertical class="mr-5"></v-divider>
+                Twitterでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithFacebook" depressed width="200" class="login-btn" color="#4267B2">
+                <v-icon x-small left color="#fff">mdi-facebook</v-icon>
+                <v-divider vertical class="mr-3"></v-divider>
+                <span>Facebookでログイン</span>
+              </v-btn>
+            </v-col>
+          </div>
+          <!-- PC表示 -->
+          <div v-else class="login-pc mx-auto">
+            <v-col cols="12" class="mt-6">
+              <v-btn v-if="!isAuthenticated" @click="loginPu" depressed width="200" class="login-btn" color="red">
+                <v-icon x-small left color="#fff">mdi-google</v-icon>
+                <v-divider vertical class="mr-6"></v-divider>
+                Googleでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithTwitterPu" depressed width="200" class="login-btn" color="blue">
+                <v-icon x-small left color="#fff">mdi-twitter</v-icon>
+                <v-divider vertical class="mr-5"></v-divider>
+                Twitterでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithFacebookPu" depressed width="200" class="login-btn" color="#4267B2">
+                <v-icon x-small left color="#fff">mdi-facebook</v-icon>
+                <v-divider vertical class="mr-3"></v-divider>
+                <span>Facebookでログイン</span>
+              </v-btn>
+            </v-col>
+          </div>
         </v-row>
       </v-layout>
     </transition>
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -84,6 +116,7 @@ export default {
   },
   data() {
     return {
+      overlay: false,
       email: '',
       password: '',
       logInErrorMessage: '',
@@ -166,6 +199,59 @@ export default {
         console.log(errorMessage)
         console.log(errorCode)
       });
+    },
+    loginPu() {
+      this.overlay = true
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
+    },
+    loginWithTwitterPu() {
+      this.overlay = true
+      const provider = new firebase.auth.TwitterAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          // /** @type {firebase.auth.OAuthCredential} */
+          var credential = result.credential;
+
+          // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+          // You can use these server side with your app's credentials to access the Twitter API.
+          var token = credential.accessToken;
+          var secret = credential.secret;
+
+          // The signed-in user info.
+          // var user = result.user;
+          // ...
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
+    },
+    loginWithFacebookPu() {
+      this.overlay = true
+      const provider = new firebase.auth.FacebookAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
     },
     logout() {
       firebase.auth().signOut()

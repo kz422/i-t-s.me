@@ -1,15 +1,22 @@
 <template>
   <v-container class="px-0">
-      <v-card rounded="xl" elevation="20" class="theme" :class="{plain: user.theme == 'plain', dark: user.theme == 'dark', pop: user.theme == 'pop'}">
+    <transition appear>
+      <v-card rounded="xl" elevation="20" class="theme" :class="{plain: user.theme == 'plain', dark: user.theme == 'dark', smokypink: user.theme == 'smokypink'}">
         <div class="avatar-top pt-14 pb-10" align="center" :style="{ backgroundImage: `url(${bgImageUrl})` }">
-          <v-avatar size="164" rounded="10" class="avatar">
-          <v-img width="200px" :src="imageUrl"></v-img>
+        <h1 class="user-name">
+          <vue-arc-text ref="arctext" :text=user.lastname :arc=+arc :direction=direction></vue-arc-text>
+        </h1>
+        <v-avatar size="164" rounded="10" class="avatar">
+        <v-img width="200px" :src="imageUrl"></v-img>
         </v-avatar>
-        <v-col class="pt-0">
+        <h1 class="user-name">
+          <vue-arc-text ref="arctext" :text=user.firstname :arc=+arc :direction=direction2></vue-arc-text>
+        </h1>
+        <!-- <v-col class="pt-0">
           <v-chip color="#fff" label>
-          <h3>{{ user.lastname }} {{ user.firstname }}</h3>
+            <h3>{{ user.lastname }} {{ user.firstname }}</h3>
           </v-chip>
-        </v-col>
+        </v-col> -->
         </div>
         <!-- <div class="sns mb-4" align="center">
           <a :href="user.igUrl" v-if="user.igUrl" target="blank">
@@ -58,7 +65,7 @@
                   to
                   v-if="this.careers && this.careers.length"
                 >
-                  <h4>CareerPath</h4>
+                  <h4>Path</h4>
                 </nuxt-link>
                 <nuxt-link
                   class="anchor-link body-1"
@@ -192,7 +199,7 @@
 
             <div class="links my-10" v-if="this.link && this.link.length">
               <h3>Links</h3>
-              <v-chip class="mt-4 mx-1" v-for="url in user.urls" :key="url.id">
+              <v-chip class="mt-4 mx-1" v-for="url in user.urls" :key="url.id" text-color="blue">
                 <a :href="`${url.url}`" target="_blank" rel="noov-chipener noreferrer">
                   {{ url.urlName }}
                 </a>
@@ -223,9 +230,11 @@
                     <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
                     <div class="slide-text">
                       <p v-if="item.text && item.text.length" class="py-2 mb-0 body-2" style="color: black">
-                        {{ item.text.slice(0, 10) }}
+                        {{ item.text.slice(0, 50) }}
                         <span>
-                          <v-btn v-if="item.text.length > 10" @click="slideDialogSwitch(item.id)" x-small color="primary" outlined>...詳しく</v-btn>
+                          <v-btn v-if="item.text.length > 20" @click="slideDialogSwitch(item.id)" x-small color="primary" outlined>
+                            ...詳しく
+                          </v-btn>
                         </span>
                       </p>
                       <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
@@ -284,13 +293,18 @@
           </v-main>
 
       </v-card>
+    </transition>
   </v-container>
 </template>
 
 <script>
 import { db,firebase } from '~/plugins/firebase'
+import VueArcText from 'vue-arc-text'
 
 export default {
+  components: {
+    VueArcText
+  },
   methods: {
     slideDialogSwitch() {
       this.slideDialog = true
@@ -317,7 +331,10 @@ export default {
         {name: 'SNS', class: 'sns'},
         {name: 'Links', class: 'links'},
         {name: 'Works', class: 'works'},
-        ]
+      ],
+      direction: 1,
+      direction2: -1,
+      arc: 180
     }
   },
   async mounted() {
@@ -333,7 +350,7 @@ export default {
           this.bgImageUrl = this.user.bgImage
           this.secretBirthday = this.user.secretBirthday
           if(this.user.imageUrl){
-            this.imageUrl = this.user.imageUrl
+          this.imageUrl = this.user.imageUrl
           }
         }
       })
@@ -367,7 +384,7 @@ export default {
   background-color: #3a4164;
   color: #f9f9f9;
 }
-.pop {
+.smokypink {
   background-color:#C3887D;
   color: #f9f9f9;
 }
@@ -430,6 +447,12 @@ a:active {
 
 .theme--light.v-list{
   background: rgba(0, 0, 0, 0);
+}
+
+.user-name {
+  font-size: 32px;
+  color: #fff;
+  font-family: Futura;
 }
 
 </style>

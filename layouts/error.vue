@@ -2,9 +2,11 @@
   <v-app dark align="center">
     <h1 v-if="error.statusCode === 404">
       {{ pageNotFound }}
+      <v-img width="600px" :src="require('@/assets/404.png')"></v-img>
     </h1>
     <h1 v-else>
       {{ otherError }}
+      <v-img width="600px" :src="require('@/assets/error.png')"></v-img>
     </h1>
     <NuxtLink to="/">
       ホームへ戻る

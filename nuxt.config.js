@@ -8,7 +8,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: 'エンジニア、デザイナー、美容師etc... ポートフォリオを簡単に作成できます。' }
+      { hid: 'description', name: 'description', content: 'エンジニア、デザイナー、美容師etc... ポートフォリオ、自己紹介サイトを簡単に作成できます。' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }

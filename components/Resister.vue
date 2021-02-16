@@ -34,30 +34,63 @@
         </nuxt-link>
         <p>{{ createUserErrorMessage }}</p>
         <p class="mb-0 caption">または</p>
-        <v-col cols="12" class="mt-2">
-          <v-btn v-if="!isAuthenticated" @click="login" depressed width="200" class="login-btn" color="red">
-            <v-icon x-small left color="#fff">mdi-google</v-icon>
-            <v-divider vertical class="mr-6"></v-divider>
-            Googleでログイン
-          </v-btn>
-        </v-col>
-        <v-col cols="12">
-          <v-btn v-if="!isAuthenticated" @click="loginWithTwitter" depressed width="200" class="login-btn" color="blue">
-            <v-icon x-small left color="#fff">mdi-twitter</v-icon>
-            <v-divider vertical class="mr-5"></v-divider>
-            Twitterでログイン
-          </v-btn>
-        </v-col>
-        <v-col cols="12">
-          <v-btn v-if="!isAuthenticated" @click="loginWithFacebook" depressed width="200" class="login-btn" color="#4267B2">
-            <v-icon x-small left color="#fff">mdi-facebook</v-icon>
-            <v-divider vertical class="mr-3"></v-divider>
-            <span>Facebookでログイン</span>
-          </v-btn>
-        </v-col>
+        <!-- モバイル表示 -->
+          <div v-if="$vuetify.breakpoint.smAndDown" class="login-m mx-auto">
+            <v-col cols="12" class="mt-6">
+              <v-btn v-if="!isAuthenticated" @click="login" depressed width="200" class="login-btn" color="red">
+                <v-icon x-small left color="#fff">mdi-google</v-icon>
+                <v-divider vertical class="mr-6"></v-divider>
+                Googleでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithTwitter" depressed width="200" class="login-btn" color="blue">
+                <v-icon x-small left color="#fff">mdi-twitter</v-icon>
+                <v-divider vertical class="mr-5"></v-divider>
+                Twitterでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithFacebook" depressed width="200" class="login-btn" color="#4267B2">
+                <v-icon x-small left color="#fff">mdi-facebook</v-icon>
+                <v-divider vertical class="mr-3"></v-divider>
+                <span>Facebookでログイン</span>
+              </v-btn>
+            </v-col>
+          </div>
+          <!-- PC表示 -->
+          <div v-else class="login-pc mx-auto">
+            <v-col cols="12" class="mt-6">
+              <v-btn v-if="!isAuthenticated" @click="loginPu" depressed width="200" class="login-btn" color="red">
+                <v-icon x-small left color="#fff">mdi-google</v-icon>
+                <v-divider vertical class="mr-6"></v-divider>
+                Googleでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithTwitterPu" depressed width="200" class="login-btn" color="blue">
+                <v-icon x-small left color="#fff">mdi-twitter</v-icon>
+                <v-divider vertical class="mr-5"></v-divider>
+                Twitterでログイン
+              </v-btn>
+            </v-col>
+            <v-col cols="12">
+              <v-btn v-if="!isAuthenticated" @click="loginWithFacebookPu" depressed width="200" class="login-btn" color="#4267B2">
+                <v-icon x-small left color="#fff">mdi-facebook</v-icon>
+                <v-divider vertical class="mr-3"></v-divider>
+                <span>Facebookでログイン</span>
+              </v-btn>
+            </v-col>
+          </div>
       </v-form>
       </v-main>
     </transition>
+    <v-overlay :value="overlay">
+      <v-progress-circular
+        indeterminate
+        size="64"
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -68,6 +101,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      overlay: false,
       form: false,
       email: '',
       password: '',
@@ -154,8 +188,57 @@ export default {
           alert(error)
         })
     },
+    loginPu() {
+      this.overlay = true
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
+    },
+    loginWithTwitterPu() {
+      this.overlay = true
+      const provider = new firebase.auth.TwitterAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
+    },
+    loginWithFacebookPu() {
+      this.overlay = true
+      const provider = new firebase.auth.FacebookAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+          const userId = firebase.auth().currentUser.uid
+          const user = result.user
+          this.setUser(user)
+          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        }).catch((error) => {
+          alert(error)
+          this.overlay = false
+        })
+    },
   },
-  
+  computed: {
+    user() {
+      return this.$store.state.user
+    },
+    isAuthenticated() {
+      return this.$store.getters.isAuthenticated
+    }
+  },
 }
 </script>
 
