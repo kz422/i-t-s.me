@@ -12,12 +12,16 @@ It'sMeは、必要事項を埋めるだけで簡単にポートフォリオサ�
 
 - ログイン機能  
 ↪︎ソーシャルアカウントログイン（Google,Twitter,Facebook）,メール + PWログイン
+- メール認証
+- PWリセット
 - プロフィールの編集,保存,削除,テーマ変更  
 ↪︎画像アップロード,複数項目をドラッグで並べ替え,ユーザー情報の削除...etc
 - マイページのQRコード生成
 
 - LogIn  
 ↪︎LogIn with social account（Google,Twitter,Facebook）,LogIn with eMail + PW
+- Verify mail address
+- Reset PW
 - edit profile,save,delete,change themes  
 ↪︎upload images,sort items with drag,delete user...etc
 - create your own QR code
