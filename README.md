@@ -28,7 +28,7 @@ It'sMeは、必要事項を埋めるだけで簡単にポートフォリオサ�
 (Create an account or Login)
 2. 必要事項を入力し保存  
 (Edit profile and save)
-3. 自分のページができたら共有！
+3. 自分のページができたら共有！ 
 (Then,Let's share！)
 
 ## SpecialThanks(libraries)
