@@ -116,7 +116,7 @@ export default {
   },
   data() {
     return {
-      overlay: false,
+      overlay: true,
       email: '',
       password: '',
       logInErrorMessage: '',
@@ -145,7 +145,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
         })
@@ -157,7 +157,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
         })
@@ -169,7 +169,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
         })
@@ -184,7 +184,7 @@ export default {
         const userId = firebase.auth().currentUser.uid
         const user = result.user
         this.setUser(user)
-        this.$router.push({ name: 'id', params: {id: `${userId}`}})
+        // this.$router.push({ name: 'id', params: {id: `${userId}`}})
       })
       .catch((error) => {
         this.unuser = true
@@ -208,7 +208,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
           this.overlay = false
@@ -233,7 +233,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
           this.overlay = false
@@ -247,7 +247,7 @@ export default {
           const userId = firebase.auth().currentUser.uid
           const user = result.user
           this.setUser(user)
-          this.$router.push({ name: 'id', params: {id: `${userId}`}})
+          // this.$router.push({ name: 'id', params: {id: `${userId}`}})
         }).catch((error) => {
           alert(error)
           this.overlay = false
@@ -274,12 +274,14 @@ export default {
       return this.$store.getters.isAuthenticated
     }
   },
-  created() {
+  beforeCreate() {
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         const loggedInUser = user.uid
         this.setUser(user)
         this.$router.push({ name: 'id', params: {id: `${loggedInUser}`}})
+      } else {
+        this.overlay = false
       }
     })
   },

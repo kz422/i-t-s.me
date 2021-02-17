@@ -28,7 +28,7 @@
         <v-btn class="mt-2" @click="signUp" depressed :loading="loading" color="primary" style="color:#fff" :disabled="!form">
           アカウント作成
         </v-btn>
-        <nuxt-link to="login" class="caption">
+        <nuxt-link to="/login" class="caption">
           <p>ご登録済みの方はこちら</p>
           <!-- <v-btn depressed style="text-transform: none;" color="primary">ログイン or SNSアカウントでログイン</v-btn> -->
         </nuxt-link>
@@ -101,7 +101,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
-      overlay: false,
+      overlay: true,
       form: false,
       email: '',
       password: '',
@@ -238,6 +238,17 @@ export default {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated
     }
+  },
+  beforeCreate() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        const loggedInUser = user.uid
+        this.setUser(user)
+        this.$router.push({ name: 'id', params: {id: `${loggedInUser}`}})
+      } else {
+        this.overlay = false
+      }
+    })
   },
 }
 </script>

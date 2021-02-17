@@ -1,6 +1,6 @@
 <template>
   <v-container class="pb-0" fluid>
-    <v-layout>
+    <v-layout class="main">
       <v-row align="center">
         <!-- modal section -->
         <v-dialog
@@ -57,16 +57,16 @@
         </v-dialog>
 
         <!-- main contents -->
-        <v-col align="center">
+        <v-col align="center" class="mt-3">
           <h1>Hello</h1>
           <h1>It'sMe</h1>
           <p>手軽にポートフォリオ作成</p>
-          <p class="mt-5 mb-6">あなたを知ってもらうための１ページ</p>
+          <!-- <p class="mt-5 mb-6">あなたを知ってもらうための１ページ</p> -->
           <p v-if="!isAuthenticated">設定はカンタン、まずはアカウント作成</p>
           <div v-if="!isAuthenticated">
             <v-row justify="center">
               <nuxt-link to="/resister">
-                <v-btn depressed color="#C3887D" style="color: #fff">はじめる</v-btn>
+                <v-btn depressed color="red" style="color:#fff" class="mt-4" elevation="10">はじめる</v-btn>
               </nuxt-link>
             </v-row>
             <!-- <v-row justify="center" class="my-5">
@@ -79,23 +79,23 @@
             </v-row> -->
           </div>
           <div v-if="isAuthenticated">
-            <v-row justify="center">
+            <v-row justify="center" class="mt-4">
               <nuxt-link :to="`/${currentUser}`">
-                <v-btn depressed>自分の<span class="itsme" >It'sMe</span>ページへ</v-btn>
+                <v-btn depressed color="red" style="color:#fff">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
               </nuxt-link>
             </v-row>
-            <v-row justify="center" class="my-5">
+            <!-- <v-row justify="center" class="my-5">
               <p class="mb-0">or</p>
             </v-row>
             <v-row justify="center">
               <nuxt-link to="/editor">
                 <v-btn depressed><span class="itsme" >It'sMe</span>エディターへ</v-btn>
               </nuxt-link>
-            </v-row>
+            </v-row> -->
           </div>
-          <v-col class="mt-16">
+          <v-col class="mt-16 btn-sample">
             <!-- <nuxt-link to="/samples"> -->
-              <v-chip @click="dialog=true">サンプルを見る</v-chip>
+              <v-btn @click="dialog=true" color="primary" rounded elevation="10">サンプルを見る</v-btn>
             <!-- </nuxt-link> -->
           </v-col>
         </v-col>
@@ -205,6 +205,13 @@ export default {
   font-weight: bold;
   color: #C3887D; */
   text-transform: none;
+}
+.btn-sample {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  align-content: center;
 }
 
 </style>

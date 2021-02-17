@@ -59,7 +59,6 @@
               <v-text-field
                 class="inputs"
                 v-model="from"
-                :counter="10"
                 label="出身"
                 required
                 outlined
@@ -133,12 +132,12 @@
                 <v-icon @click="deleteFavorite(index)" x-small color="red">mdi-close-circle</v-icon>
               </v-chip>
             </draggable>
-            <p class="caption pt-3">ドラッグで並び替えが可能です</p>
+            <p class="caption pt-3" v-show="favorite">ドラッグで並び替えが可能です</p>
             <v-icon small>mdi-transfer-up</v-icon>
             <v-form class="inputs" v-model="formFav" ref="formFav">
             <v-chip class="mb-2" :color="selectedColor" text-color="#f9f9f9" v-show="favorite">
-                {{ favorite }}
-              </v-chip>
+              {{ favorite }}
+            </v-chip>
               <v-text-field
                 class="inputs"
                 v-model="favorite"
