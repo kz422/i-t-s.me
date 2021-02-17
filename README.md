@@ -1,20 +1,48 @@
-# profiles
+![ロゴ](https://firebasestorage.googleapis.com/v0/b/profs-941da.appspot.com/o/images%2Fezgif.com-resize.png?alt=media&token=c8494a8c-c9ca-42b8-bdef-5d9ac31aac35)
 
-## Build Setup
+## Description
 
-```bash
-# install dependencies
-$ npm install
+It'sMeは、必要事項を埋めるだけで簡単にポートフォリオサイトを作成できるサービスです
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+## Demo
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+![デモ](https://firebasestorage.googleapis.com/v0/b/profs-941da.appspot.com/o/images%2Fdemo2.gif?alt=media&token=8fddeaa8-90c5-407b-91e9-fd1bb535a184)
 
-# generate static project
-$ npm run generate
-```
+## Feature
 
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+- ログイン機能  
+↪︎ソーシャルアカウントログイン（Google,Twitter,Facebook）,メール + PWログイン
+- プロフィールの編集,保存,削除,テーマ変更  
+↪︎画像アップロード,複数項目をドラッグで並べ替え,ユーザー情報の削除...etc
+- マイページのQRコード生成
+
+- LogIn  
+↪︎LogIn with social account（Google,Twitter,Facebook）,LogIn with eMail + PW
+- edit profile,save,delete,change themes  
+↪︎upload images,sort items with drag,delete user...etc
+- create your own QR code
+
+## Usage
+
+1. アカウント作成orログイン
+2. 必要事項を入力し保存
+3. 自分のページができたら共有！
+
+1. Create an account or Login
+2. Edit profile and save
+3. Let's share！
+
+## SpecialThanks(libraries)
+- [arctxt](https://www.npmjs.com/package/arctxt)
+- [qrcode](https://www.npmjs.com/package/qrcode)
+- [vue-scrollto](https://www.npmjs.com/package/vue-scrollto)
+- [vuedraggable](https://www.npmjs.com/package/vuedraggable)
+
+## 作者
+
+[Kazuki Inoue](https://github.com/kz422)
+mail to: p.inoue.p@mail.com
+
+## Lisence
+
+[MIT]
