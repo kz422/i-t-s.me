@@ -24,13 +24,12 @@ It'sMeは、必要事項を埋めるだけで簡単にポートフォリオサ�
 
 ## Usage
 
-1. アカウント作成orログイン
-2. 必要事項を入力し保存
+1. アカウント作成orログイン  
+(Create an account or Login)
+2. 必要事項を入力し保存  
+(Edit profile and save)
 3. 自分のページができたら共有！
-  
-1. Create an account or Login
-2. Edit profile and save
-3. Let's share！
+(Then,Let's share！)
 
 ## SpecialThanks(libraries)
 - [arctxt](https://www.npmjs.com/package/arctxt)
