@@ -81,7 +81,7 @@
           <div v-if="isAuthenticated">
             <v-row justify="center" class="mt-4">
               <nuxt-link :to="`/${currentUser}`">
-                <v-btn depressed color="red" style="color:#fff">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
+                <v-btn depressed color="red" style="color:#fff" elevation="10">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
               </nuxt-link>
             </v-row>
             <!-- <v-row justify="center" class="my-5">

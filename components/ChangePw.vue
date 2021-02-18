@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <v-form v-model="form" ref="form">
-      <p class="body-2 mb-0">パスワード変更用のメールを送信致します。</p>
-      <p class="body-2">メールアドレスを入力してください。</p>
+      <p class="caption mb-0">パスワード変更用のメールを送信致します。</p>
+      <p class="caption">メールアドレスを入力してください。</p>
       <v-text-field 
         type="email" 
         label="メールアドレスを入力" 

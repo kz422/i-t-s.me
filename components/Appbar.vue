@@ -99,6 +99,9 @@ import QRCode from 'qrcode'
 export default {
   methods: {
     ...mapActions(['setUser']),
+    closeDraw() {
+      this.drawer = false
+    },
     login() {
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
@@ -139,6 +142,7 @@ export default {
       firebase.auth().signOut()
         .then(() => {
           this.setUser(null)
+          this.closeDraw()
           alert('ログアウトしました')
           this.$router.push('/')
         })
