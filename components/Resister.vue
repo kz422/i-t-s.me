@@ -14,15 +14,18 @@
           :rules="[rules.required, rules.email]"
         ></v-text-field>
         <v-text-field
-          type="password"
+          :type="show1 ? 'text' : 'password'"
           label="パスワードを入力"
           v-model="password" 
           outlined 
           rounded
           dense
+          counter
           hint="パスワードは8文字以上、20文字以内で設定してください"
           persistent-hint
-          :rules="[rules.required, rules.counterMin, rules.counterMax]"
+          :rules="[rules.required, rules.counterMin, rules.counterMax, rules.numEn]"
+          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+          @click:append="show1 = !show1"
         ></v-text-field>
         <!-- <p class="caption mb-0 mt-4">以上の内容で</p> -->
         <v-btn class="mt-2" @click="signUp" depressed :loading="loading" color="primary" style="color:#fff" :disabled="!form">
@@ -101,6 +104,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      show1: false,
       overlay: true,
       form: false,
       email: '',
@@ -111,6 +115,7 @@ export default {
           required: value => !!value || '必須項目です',
           counterMax: value => value.length <= 20 || '20文字以内で入力してください',
           counterMin: value => value.length >= 8 || '8文字以上で入力してください',
+          numEn: (value) => /^[0-9a-zA-Z]*$/.test(value) || '半角英数で入力してください',
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             return pattern.test(value) || 'メールアドレス形式で入力してください'

@@ -46,8 +46,17 @@
                 <Sample class="mx-auto px-2"/>
               </v-carousel-item>
               <v-carousel-item>
-                <h3>Sergioさんのページ</h3>
+                <h3>Johnさんのページ</h3>
                 <Sample2 class="mx-auto px-2"/>
+              </v-carousel-item>
+              <v-carousel-item>
+                <h3>Janeさんのページ</h3>
+                <Sample3 class="mx-auto px-2"/>
+              </v-carousel-item>
+              <v-carousel-item>
+                <h3>編集画面のサンプルページ</h3>
+                <p class="caption mb-0">＊保存はできません</p>
+                <SampleEdit class="mx-auto px-2"/>
               </v-carousel-item>
             </v-carousel>
             <v-chip class="btn" @click="dialog = false" outlined>
@@ -69,29 +78,13 @@
                 <v-btn depressed color="red" style="color:#fff" class="mt-4" elevation="10">はじめる</v-btn>
               </nuxt-link>
             </v-row>
-            <!-- <v-row justify="center" class="my-5">
-              <p class="mb-0">or</p>
-            </v-row>
-            <v-row justify="center">
-              <nuxt-link to="/login">
-                <v-btn depressed style="text-transform: none;" color="primary">ログイン・SNSアカウントでログイン</v-btn>
-              </nuxt-link>
-            </v-row> -->
           </div>
           <div v-if="isAuthenticated">
             <v-row justify="center" class="mt-4">
               <nuxt-link :to="`/${currentUser}`">
-                <v-btn depressed color="red" style="color:#fff" elevation="10">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
+                <v-btn depressed elevation="10">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
               </nuxt-link>
             </v-row>
-            <!-- <v-row justify="center" class="my-5">
-              <p class="mb-0">or</p>
-            </v-row>
-            <v-row justify="center">
-              <nuxt-link to="/editor">
-                <v-btn depressed><span class="itsme" >It'sMe</span>エディターへ</v-btn>
-              </nuxt-link>
-            </v-row> -->
           </div>
           <v-col class="mt-16 btn-sample">
             <!-- <nuxt-link to="/samples"> -->
@@ -110,12 +103,16 @@ import { mapActions } from 'vuex'
 import LogIn from '~/components/LogIn'
 import Sample from '~/components/Sample'
 import Sample2 from '~/components/Sample2'
+import Sample3 from '~/components/Sample3'
+import SampleEdit from '~/components/SampleEdit'
 
 export default {
   components: {
     LogIn,
     Sample,
     Sample2,
+    Sample3,
+    SampleEdit,
   },
   data () {
     return {
@@ -132,7 +129,7 @@ export default {
     ...mapActions(['setUser']),
     prev(){
       if(this.model == 0){
-        this.model = 2
+        this.model = 4
       } else {
         this.model--
       }

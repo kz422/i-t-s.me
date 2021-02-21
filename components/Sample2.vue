@@ -1,15 +1,22 @@
 <template>
   <v-container class="px-0">
-      <v-card rounded="xl" elevation="20" class="theme" :class="{plain: user.theme == 'plain', dark: user.theme == 'dark', pop: user.theme == 'pop'}">
+    <transition appear>
+      <v-card rounded="xl" elevation="20" class="theme" :class="{plain: user.theme == 'plain', dark: user.theme == 'dark', smokypink: user.theme == 'smokypink'}">
         <div class="avatar-top pt-14 pb-10" align="center" :style="{ backgroundImage: `url(${bgImageUrl})` }">
-          <v-avatar size="164" rounded="10" class="avatar">
-          <v-img width="200px" :src="imageUrl"></v-img>
+        <h1 class="user-name">
+          <vue-arc-text ref="arctext" :text=user.lastname :arc=+arc :direction=direction :class="{plainname: user.theme == 'plain' && !bgImageUrl}"></vue-arc-text>
+        </h1>
+        <v-avatar size="164" rounded="10" class="avatar">
+        <v-img width="200px" :src="imageUrl"></v-img>
         </v-avatar>
-        <v-col class="pt-0">
+        <h1 class="user-name">
+          <vue-arc-text ref="arctext" :text=user.firstname :arc=+arc :direction=direction2 :class="{plainname: user.theme == 'plain' && !bgImageUrl}"></vue-arc-text>
+        </h1>
+        <!-- <v-col class="pt-0">
           <v-chip color="#fff" label>
             <h3>{{ user.lastname }} {{ user.firstname }}</h3>
           </v-chip>
-        </v-col>
+        </v-col> -->
         </div>
         <!-- <div class="sns mb-4" align="center">
           <a :href="user.igUrl" v-if="user.igUrl" target="blank">
@@ -49,6 +56,7 @@
                   class="anchor-link body-1"
                   v-scroll-to="'.intro'"
                   to
+                  v-if="this.user.intro && this.user.intro.length"
                 >
                   <h4>AboutMe</h4>
                 </nuxt-link>
@@ -58,7 +66,7 @@
                   to
                   v-if="this.careers && this.careers.length"
                 >
-                  <h4>CareerPath</h4>
+                  <h4>Path</h4>
                 </nuxt-link>
                 <nuxt-link
                   class="anchor-link body-1"
@@ -130,7 +138,7 @@
 
               <v-divider></v-divider>
 
-            <div class="intro my-10">
+            <div class="intro my-10" v-if="this.user.intro && this.user.intro.length">
               <h3>AboutMe</h3>
               <p class="body-2">{{ user.intro }}</p>
               <v-divider></v-divider>
@@ -173,12 +181,14 @@
               <a :href="user.twUrl" v-if="user.twUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#1DA1F2">mdi-twitter</v-icon>
               </a>
+                <v-icon v-else>mdi-twitter</v-icon>
+
               <a :href="user.ytUrl" v-if="user.ytUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#FF0000">mdi-youtube</v-icon>
               </a>
                 <v-icon v-else>mdi-youtube</v-icon>
 
-              <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
+              <!-- <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#2867B2">mdi-linkedin</v-icon>
               </a>
                 <v-icon v-else>mdi-linkedin</v-icon>
@@ -186,13 +196,13 @@
               <a :href="user.liUrl" v-if="user.liUrl" target="_blank" rel="noov-chipener noreferrer">
                 <v-icon color="#2867B2">mdi-github</v-icon>
               </a>
-                <v-icon v-else>mdi-github</v-icon>
+                <v-icon v-else>mdi-github</v-icon> -->
               <v-divider class="mt-10"></v-divider>
             </div>
 
             <div class="links my-10" v-if="this.link && this.link.length">
               <h3>Links</h3>
-              <v-chip class="mt-4 mx-1" v-for="url in user.urls" :key="url.id">
+              <v-chip class="mt-4 mx-1" v-for="url in user.urls" :key="url.id" text-color="blue">
                 <a :href="`${url.url}`" target="_blank" rel="noov-chipener noreferrer">
                   {{ url.urlName }}
                 </a>
@@ -202,19 +212,20 @@
             </div>
           </div>
             <div v-if="this.items && this.items.length" class="works mx-1">
-              <h3>Works</h3>
+              <h3 class="mb-6">Works</h3>
+              <p class="mb-1" style="font-family: Courier">{{ model + 1 }} / {{ items.length }}</p>
               <v-card
                 max-width="600"
-                class="mx-auto my-16"
-                color="rgba(255,255,255, 0)"
+                class="mx-auto mb-4"
+                color="#f9f9f9"
               >
                 <v-carousel
                   delimiter-icon="mdi-minus"
                   height="auto"
-                  max="10"
                   show-arrows-on-hover
                   hide-delimiters
                   continuous
+                  v-model="model"
                 >
                   <v-carousel-item
                     v-for="item in items"
@@ -222,39 +233,47 @@
                   >
                     <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
                     <div class="slide-text">
-                      <p v-if="item.text && item.text.length" class="py-2 mb-0 body-2" style="color: black">
-                        {{ item.text.slice(0, 10) }}
-                        <span>
-                          <v-btn v-if="item.text.length > 10" @click="slideDialogSwitch(item.id)" x-small color="primary" outlined>...詳しく</v-btn>
-                        </span>
+                      <p v-if="item.text && item.text.length" class="pt-2 pb-1 px-6 mb-0 caption" style="color: black">
+                        {{ item.text.slice(0, 50) }}
+                        <span v-show="item.text.length > 50">
+                        ...
+                      </span>
                       </p>
-                      <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                        <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                      </a>
+                      <v-btn v-if="item.text.length > 50" @click="slideDialogSwitch(item)" x-small color="primary" outlined class="mb-2">
+                        詳しく
+                      </v-btn>
+                      <v-col class="py-0">
+                        <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
+                          <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                        </a>
+                      </v-col>
                     </div>
-                    <v-dialog
-                      v-model="slideDialog"
-                      v-if="item.text.length > 1"
-                      height="500"
-                      width="600"
-                    >
-                      <v-row align="center" justify="center" class="mx-0">
-                        <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${item.slideImage})` }">
-                          <v-overlay
-                            :absolute="absolute"
-                            :value="slideDialog"
-                          >
-                          <p>{{ item.text }}</p>
-                          <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                            <v-chip v-if="item.url" class="my-0" small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                          </a>
-                          </v-overlay>
-                        </v-card>
-                      </v-row>
-                    </v-dialog>
                   </v-carousel-item>
                 </v-carousel>
               </v-card>
+              <v-dialog
+                v-model="slideDialog"
+                v-if="currentSlide"
+                height="500"
+                width="600"
+                overlay-opacity="5"
+              >
+                <v-row align="center" justify="center" class="mx-0">
+                  <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})` }">
+                    <v-overlay
+                      :absolute="absolute"
+                      :value="slideDialog"
+                    >
+                    <p>{{ currentSlide.text }}</p>
+                    <a :href="`${currentSlide.url}`" target="_blank" rel="noov-chipener noreferrer">
+                      <v-chip v-if="currentSlide.url" class="my-0" small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                    </a>
+                    <p></p>
+                    <v-btn class="mr-1" @click="slideDialog = false">Close</v-btn>
+                    </v-overlay>
+                  </v-card>
+                </v-row>
+              </v-dialog>
             </div>
 
             <v-list-group append-icon="mdi-share-variant-outline">
@@ -284,20 +303,28 @@
           </v-main>
 
       </v-card>
+    </transition>
   </v-container>
 </template>
 
 <script>
 import { db,firebase } from '~/plugins/firebase'
+import VueArcText from 'vue-arc-text'
 
 export default {
+  components: {
+    VueArcText
+  },
   methods: {
-    slideDialogSwitch() {
+    slideDialogSwitch(item) {
+      this.currentSlide = item
       this.slideDialog = true
     }
   },
   data() {
     return {
+      currentSlide: null,
+      model: 0,
       overlay: false,
       absolute: true,
       slideDialog: false,
@@ -317,7 +344,10 @@ export default {
         {name: 'SNS', class: 'sns'},
         {name: 'Links', class: 'links'},
         {name: 'Works', class: 'works'},
-        ]
+      ],
+      direction: 1,
+      direction2: -1,
+      arc: 180
     }
   },
   async mounted() {
@@ -333,7 +363,7 @@ export default {
           this.bgImageUrl = this.user.bgImage
           this.secretBirthday = this.user.secretBirthday
           if(this.user.imageUrl){
-            this.imageUrl = this.user.imageUrl
+          this.imageUrl = this.user.imageUrl
           }
         }
       })
@@ -351,7 +381,6 @@ export default {
   transform: translateY(30vh) translateY(0px);
 }
 
-
 .test {
   border-radius: 20px;
   background: #E6E7EE;
@@ -363,11 +392,14 @@ export default {
   color: #31344B;
   background: #f9f9f9;
 }
+.plainname {
+  color: #31344B;
+}
 .dark {
   background-color: #3a4164;
   color: #f9f9f9;
 }
-.pop {
+.smokypink {
   background-color:#C3887D;
   color: #f9f9f9;
 }
@@ -412,6 +444,7 @@ a:active {
   white-space: pre-wrap;
   word-wrap:break-word;
   background-size: cover;
+  background-position: center;
   background-color: 255,255,255, 0.8;
   background-blend-mode:lighten;
 }
@@ -430,6 +463,12 @@ a:active {
 
 .theme--light.v-list{
   background: rgba(0, 0, 0, 0);
+}
+
+.user-name {
+  font-size: 32px;
+  color: #fff;
+  font-family: Futura;
 }
 
 </style>

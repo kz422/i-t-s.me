@@ -212,19 +212,20 @@
             </div>
           </div>
             <div v-if="this.items && this.items.length" class="works mx-1">
-              <h3>Works</h3>
+              <h3 class="mb-6">Works</h3>
+              <p class="mb-1" style="font-family: Courier">{{ model + 1 }} / {{ items.length }}</p>
               <v-card
                 max-width="600"
-                class="mx-auto my-16"
-                color="rgba(255,255,255, 0)"
+                class="mx-auto mb-4"
+                color="#f9f9f9"
               >
                 <v-carousel
                   delimiter-icon="mdi-minus"
                   height="auto"
-                  max="10"
                   show-arrows-on-hover
                   hide-delimiters
                   continuous
+                  v-model="model"
                 >
                   <v-carousel-item
                     v-for="item in items"
@@ -232,41 +233,47 @@
                   >
                     <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
                     <div class="slide-text">
-                      <p v-if="item.text && item.text.length" class="py-2 mb-0 body-2" style="color: black">
+                      <p v-if="item.text && item.text.length" class="pt-2 pb-1 px-6 mb-0 caption" style="color: black">
                         {{ item.text.slice(0, 50) }}
-                        <span>
-                          <v-btn v-if="item.text.length > 20" @click="slideDialogSwitch(item.id)" x-small color="primary" outlined>
-                            ...詳しく
-                          </v-btn>
-                        </span>
+                        <span v-show="item.text.length > 50">
+                        ...
+                      </span>
                       </p>
-                      <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                        <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                      </a>
+                      <v-btn v-if="item.text.length > 50" @click="slideDialogSwitch(item)" x-small color="primary" outlined class="mb-2">
+                        詳しく
+                      </v-btn>
+                      <v-col class="py-0">
+                        <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
+                          <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                        </a>
+                      </v-col>
                     </div>
-                    <v-dialog
-                      v-model="slideDialog"
-                      v-if="item.text.length > 1"
-                      height="500"
-                      width="600"
-                    >
-                      <v-row align="center" justify="center" class="mx-0">
-                        <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${item.slideImage})` }">
-                          <v-overlay
-                            :absolute="absolute"
-                            :value="slideDialog"
-                          >
-                          <p>{{ item.text }}</p>
-                          <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                            <v-chip v-if="item.url" class="my-0" small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                          </a>
-                          </v-overlay>
-                        </v-card>
-                      </v-row>
-                    </v-dialog>
                   </v-carousel-item>
                 </v-carousel>
               </v-card>
+              <v-dialog
+                v-model="slideDialog"
+                v-if="currentSlide"
+                height="500"
+                width="600"
+                overlay-opacity="5"
+              >
+                <v-row align="center" justify="center" class="mx-0">
+                  <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})` }">
+                    <v-overlay
+                      :absolute="absolute"
+                      :value="slideDialog"
+                    >
+                    <p>{{ currentSlide.text }}</p>
+                    <a :href="`${currentSlide.url}`" target="_blank" rel="noov-chipener noreferrer">
+                      <v-chip v-if="currentSlide.url" class="my-0" small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                    </a>
+                    <p></p>
+                    <v-btn class="mr-1" @click="slideDialog = false">Close</v-btn>
+                    </v-overlay>
+                  </v-card>
+                </v-row>
+              </v-dialog>
             </div>
 
             <v-list-group append-icon="mdi-share-variant-outline">
@@ -309,12 +316,15 @@ export default {
     VueArcText
   },
   methods: {
-    slideDialogSwitch() {
+    slideDialogSwitch(item) {
+      this.currentSlide = item
       this.slideDialog = true
     }
   },
   data() {
     return {
+      currentSlide: null,
+      model: 0,
       overlay: false,
       absolute: true,
       slideDialog: false,
