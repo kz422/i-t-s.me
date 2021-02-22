@@ -155,7 +155,7 @@
                 rounded
               ></v-text-field>
               <v-col>
-                <v-btn color="primary" @click="addFavorite" :disabled="!formFav">Add</v-btn>
+                <v-btn color="primary" @click="addFavorite" :disabled="!formFav">追加</v-btn>
               </v-col>
               <v-chip @click="resetFavForm" small outlined>reset</v-chip>
             </v-form>
@@ -268,7 +268,7 @@
                   outlined
                 ></v-textarea>
                 <v-col>
-                  <v-btn color="primary" @click="addCareer" :disabled="!formCareer">Add</v-btn>
+                  <v-btn color="primary" @click="addCareer" :disabled="!formCareer">追加</v-btn>
                 </v-col>
                 <v-chip @click="resetCareerForm" small outlined>reset</v-chip>
               </v-form>
@@ -316,7 +316,7 @@
                 :swatches="swatches"
               ></v-color-picker>
               <v-col class="pt-0">
-                <v-btn color="primary" @click="addSkill" :disabled="!formSkill">Add</v-btn>
+                <v-btn color="primary" @click="addSkill" :disabled="!formSkill">追加</v-btn>
               </v-col>
               <v-chip @click="resetSkillForm" small outlined>reset</v-chip>
             </v-form>
@@ -439,7 +439,7 @@
               persistent-hint
             ></v-text-field>
             <v-col>
-              <v-btn color="primary" @click="addUrls" :disabled="!form">Add</v-btn>
+              <v-btn color="primary" @click="addUrls" :disabled="!form">追加</v-btn>
             </v-col>
             <v-chip @click="resetUrlForm" small outlined>reset</v-chip>
           </v-form>
@@ -487,7 +487,7 @@
                 </v-carousel-item>
               </v-carousel>
             </v-card>
-            <!-- slideの内容編集 -->
+            <!-- slideの内容編集(並び替え・削除) -->
             <v-dialog
               v-model="isSlideSort"
               max-width="600"
@@ -572,42 +572,64 @@
                 </v-card>
               </v-row>
             </v-dialog>
-              <v-btn class="mb-5" @click="isSlideSort = true" small>
+              <v-btn class="mb-5" @click="addSlideDialog=true" small color="primary">
+                追加する<v-icon x-small>mdi-plus</v-icon>
+              </v-btn>
+              <v-btn class="mb-5" @click="isSlideSort=true" small>
                 編集<v-icon x-small>mdi-pencil</v-icon>
-                <!-- 並び替え<v-icon class="ml-1" small>mdi-sort</v-icon>/削除<v-icon small>mdi-trash-can</v-icon> -->
               </v-btn>
               <br>
-              <v-icon class="mb-2" small>mdi-transfer-up</v-icon>
-              <v-form class="textareas" ref="slideform" v-model="formSlide">
-                <v-chip v-show="this.slideImage" x-small outlined>Preview</v-chip>
-                <v-img v-show="this.slideImage" :src="slideImage" class="mx-auto mb-6" max-width="200" contain></v-img>
-                <v-file-input v-if="view" type="file" @change="uploadFile" accept="image/*" show-size small-chips label="画像を選択" :clearable="false" dense :rules="imagerules"></v-file-input>
-                <v-text-field
-                  v-model="slideUrl"
-                  label="urlを入力（あれば）"
-                  type="url"
-                  outlined
-                  dense
-                  rounded
-                  hint="http(s)://〜入力してください"
-                  persistent-hint
-                  :rules="urlRules"
-                ></v-text-field>
-                <v-textarea
-                  class="textareas"
-                  v-model="slideText"
-                  label="テキストを入力"
-                  outlined
-                  shaped
-                  rounded
-                  no-resize
-                ></v-textarea>
-                <v-col>
-                  <v-btn color="primary" @click="addItem" :disabled="!formSlide">Add</v-btn>
-                </v-col>
-                <v-chip @click="reset" small outlined>reset</v-chip>
-              </v-form>
-            <!-- <p v-if="!overLength" class="body-2" style="color: red">*最大10枚までアップロード可能です<br>アップロードするにはスライドを削除してください</p> -->
+              <!-- スライド追加dialog -->
+              <v-dialog
+                v-model="addSlideDialog"
+                height="auto"
+                width="600"
+              >
+                <v-card class="pa-4" width="600" align="center" justify="center" rounded="xl">
+                  <v-app-bar flat height="20" color="rgba(255, 255, 255, 0)">
+                    <v-spacer></v-spacer>
+                    <v-icon @click="addSlideDialog=false" right>mdi-close</v-icon>
+                  </v-app-bar>
+                  <v-form class="textareas" ref="slideform" v-model="formSlide">
+                    <v-chip x-small outlined>Preview</v-chip>
+                    <v-card class="mb-8" width="200" height="200" flat>
+                      <v-img v-show="this.slideImage" :src="slideImage" class="mx-auto" height="200" max-width="200" contain></v-img>
+                      <div v-show="!this.slideImage">
+                        <v-img width="200" :src="require('@/assets/preimage.png')">
+                        </v-img>
+                        <p class="caption">ここに画像が表示されます</p>
+                      </div>
+                    </v-card>
+                    <v-file-input v-if="view" type="file" @change="uploadFile" accept="image/*" show-size small-chips label="画像を選択" :clearable="false" dense :rules="imagerules"></v-file-input>
+                    <v-text-field
+                      v-model="slideUrl"
+                      label="URLを入力（あれば）"
+                      type="url"
+                      outlined
+                      dense
+                      rounded
+                      hint="http(s)://〜入力してください"
+                      persistent-hint
+                      :rules="urlRules"
+                    ></v-text-field>
+                    <v-textarea
+                      class="textareas"
+                      v-model="slideText"
+                      label="テキストを入力"
+                      outlined
+                      shaped
+                      rounded
+                      no-resize
+                      height="100"
+                    ></v-textarea>
+                    <v-col class="pt-0">
+                      <v-btn color="primary" @click="addItem" :disabled="!formSlide && !this.slideImage">追加</v-btn>
+                    </v-col>
+                    <v-chip @click="reset" small outlined>reset</v-chip>
+                  </v-form>
+                <!-- <p v-if="!overLength" class="body-2" style="color: red">*最大10枚までアップロード可能です<br>アップロードするにはスライドを削除してください</p> -->
+                </v-card>
+              </v-dialog>
         </div>
 
         <v-divider></v-divider>
@@ -685,6 +707,8 @@ export default {
     addItem() {
       this.items.push({slideImage: this.slideImage, text: this.slideText, url: this.slideUrl})
       this.reset()
+      this.addSlideDialog = false
+      this.model = this.items.length -1
     },
     deleteSlide(index) {
       if(confirm('削除してもよろしいですか？')){
@@ -831,6 +855,7 @@ export default {
       absolute: true,
       slideDialog: false,
       isSlideSort: false,
+      addSlideDialog: false,
       isEditable: false,
       drag: true,
       careerAge: '',
