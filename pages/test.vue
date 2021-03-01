@@ -14,6 +14,11 @@
     <v-btn @click="save">check</v-btn>
     <p>{{ originalUserName }}</p>
     <p>{{ isUser }}</p>
+    <vue-scroll-snap :horizontal="true">
+    <div class="item"><v-img width="100px" :src="require('@/assets/ItsMe_Logo.png')"></v-img></div>
+    <div class="item"><v-img width="100px" :src="require('@/assets/ItsMe_Logo.png')"></v-img></div>
+    ...
+  </vue-scroll-snap>
   </div>
 </v-container>
 </template>
@@ -22,10 +27,12 @@
 import { db,firebase } from '~/plugins/firebase'
 import { mapActions } from 'vuex'
 import VueArcText from 'vue-arc-text'
+import VueScrollSnap from "~/components/VueScrollSnap";
 
 export default {
   components: {
-    VueArcText
+    VueArcText,
+    VueScrollSnap
   },
   methods: {
     save() {
@@ -91,6 +98,15 @@ export default {
 .test{
   width: 200px;
 }
+.item {
+    /* Set the minimum height of the items to be the same as the height of the scroll-snap-container.*/
+    min-height: 500px;
+  }
 
+  .scroll-snap-container {
+    height: 500px;
+    width: 500px;
+  }
+</style>
 
 </style>

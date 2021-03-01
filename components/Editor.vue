@@ -166,7 +166,7 @@
 
         <div class="intro my-10">
           <h3>AboutMe</h3>
-          <p class="intro body-2">{{ this.intro }}</p>
+          <p class="intro-p body-2">{{ this.intro }}</p>
           <v-textarea
             class="mx-auto textareas"
             v-model="intro"
@@ -186,7 +186,7 @@
           <v-timeline :dense="$vuetify.breakpoint.smAndDown">
             <draggable v-model="careers" handle=".handle" v-bind="dragOptions">
               <v-timeline-item v-for="(career, index) in careers" :key="career.id" small fill-dot icon="mdi-account-star">
-                <p v-show="!isEditable" class="mb-2" style="font-style: italic">{{ career.careerAge }}</p>
+                <p v-show="!isEditable" class="mb-2 body-2" style="font-style: italic">{{ career.careerAge }}</p>
                 <v-text-field
                   v-show="isEditable"
                   v-model="career.careerAge"
@@ -448,188 +448,243 @@
         <v-divider></v-divider>
               
         <div class="slide my-8">
-          <h3 class="mb-6">Works</h3>
-          <p class="mb-1" style="font-family: Courier">{{ model + 1 }} / {{ items.length }}</p>
-            <v-card
-              max-width="600"
-              class="mx-auto mb-4"
-              color="rgba(255, 255, 255, 0)"
-            >
-              <v-carousel
-                delimiter-icon="mdi-minus"
-                height="auto"
-                show-arrows-on-hover
-                hide-delimiters
-                continuous
-                v-model="model"
+          <div class="works">
+          <h3 class="mb-2">Works</h3>
+          <v-icon>mdi-gesture-swipe-horizontal</v-icon>
+          <vue-scroll-snap :horizontal="true">
+            <v-row v-for="(item, index) in items" :key="item.id" justify="center" class="ml-2 mr-2">
+              <v-card max-width="400" height="auto" class="mx-2 my-12" rounded="lg" color="rgba(255 ,255 ,255 ,0.4)" @click="viewSlideDialogSwitch(item)">
+                <v-img :src="item.slideImage" contain height="250"></v-img>
+                <v-card-title v-if="item.title && item.title.length">{{ item.title }}</v-card-title>
+                <v-card-subtitle class="caption" v-if="item.slideCate && item.slideCate.length" align="left">{{ item.slideCate }}</v-card-subtitle>
+                <v-card-text v-if="item.text && index != selectedIndex" class="view-slide-text caption" align="left">{{ item.text.slice(0, 50) }}<span v-show="item.text.length > 50">...</span></v-card-text>
+                <div v-if="item.text && item.text.length && item.text.length > 50">
+                  <v-icon v-show="index === selectedIndex" @click="selectedIndex = !index">
+                    {{ index === selectedIndex ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                  </v-icon>
+                </div>
+                <v-card-text align="left" v-if="item.url">
+                  <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
+                    <v-chip class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                  </a>
+                </v-card-text>
+              </v-card>
+            </v-row>
+          </vue-scroll-snap>
+
+          <v-dialog
+            v-model="viewSlideDialog"
+            v-if="currentSlide"
+            height="auto"
+            width="400"
+            overlay-opacity="5"
+            scrollable
+          >
+            <v-row align="center" justify="center" class="mx-0">
+              <v-card min-height="500" height="auto" width="600" dark align="center" class="view-slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})`}" style="background-color: rgba(0,0,0, 0.8);">
+                <v-toolbar color="rgba(0, 0, 0, 0)" short flat dense>
+                  <v-spacer></v-spacer>
+                  <v-icon class="mt-5" @click="viewSlideDialog=false">mdi-close</v-icon>
+                </v-toolbar>
+                <div class="mx-6">
+                  <v-card-title v-if="currentSlide.title && currentSlide.title.length" class="pb-0 view-slide-text">{{ currentSlide.title }}</v-card-title>
+                  <v-card-subtitle class="caption view-slide-text" v-if="currentSlide.slideCate && currentSlide.slideCate.length" align="left">{{ currentSlide.slideCate }}</v-card-subtitle>
+                  <v-card-text class="view-slide-text caption" align="left">{{ currentSlide.text }}</v-card-text>
+                  <a :href="`${currentSlide.url}`" target="_blank" rel="noov-chipener noreferrer">
+                    <v-chip v-if="currentSlide.url" class="mt-4 mb-5" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
+                  </a>
+                </div>
+                <!-- <v-btn class="my-4" @click="slideDialog=false" color="primary" small>OK</v-btn> -->
+              </v-card>
+            </v-row>
+          </v-dialog>
+        </div>
+        
+        <!-- slideの内容編集(並び替え・削除) -->
+        <v-dialog
+          v-model="isSlideSort"
+          max-width="440"
+        >
+        <div class="slide-sort" align="center">
+          <v-card max-width="450" height="auto" class="pa-4" color="rgba(0, 0, 0, 0.7)" rounded="xl" dark>
+            <!-- <v-row align="center"> -->
+            <h5>"<v-icon >mdi-drag-horizontal-variant</v-icon>" をドラッグで並び替えが可能です</h5>
+            <draggable v-model="items" v-bind="dragOptions" handle=".handle">
+              <v-col
+                align="center"
+                v-for="(item, index) in items"
+                :key="item.id"
+                class="my-1 sort-items"
               >
-                <v-carousel-item
-                  v-for="item in items"
-                  :key="item.id"
-                >
-                  <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
-                  <div class="slide-text">
-                    <p v-if="item.text && item.text.length" class="pt-2 pb-1 px-6 mb-0 body-2 caption" style="color: black">
-                      {{ item.text.slice(0, 50) }}
-                      <span v-show="item.text.length > 50">
-                        ...
-                      </span>
-                    </p>
-                    <v-btn v-if="item.text.length > 50" @click="slideDialogSwitch(item)" x-small color="primary" outlined class="mb-2">
-                      詳しく
-                    </v-btn>
-                    <v-col class="py-0">
-                      <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                        <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                      </a>
-                    </v-col>
-                  </div>
-                </v-carousel-item>
-              </v-carousel>
-            </v-card>
-            <!-- slideの内容編集(並び替え・削除) -->
-            <v-dialog
-              v-model="isSlideSort"
-              max-width="600"
-            >
-            <div class="slide-sort" align="center">
-              <v-card max-width="450" height="auto" class="pa-4" color="rgba(0, 0, 0, 0.7)" rounded="xl" dark>
-                <!-- <v-row align="center"> -->
-                <h5>"<v-icon >mdi-drag-horizontal-variant</v-icon>" をドラッグで並び替えが可能です</h5>
-                <draggable v-model="items" v-bind="dragOptions" handle=".handle">
-                  <v-col
-                    align="center"
-                    v-for="(item, index) in items"
-                    :key="item.id"
-                    class="my-1 sort-items"
-                  >
-                    <p class="mb-0" style="font-family: Courier">{{ index + 1 }}</p>
-                    <v-divider></v-divider>
-                    <v-row align="center">
-                      <v-col class="pb-0">
-                        <v-img :src="item.slideImage" width="150" height="100" contain class="my-2"></v-img>
-                      </v-col>
-                      <v-col>
-                        <v-row justify="center">
-                          <v-btn @click="slideDialogSwitch(item)" class="my-2" x-small color="primary" outlined>編集<v-icon small>mdi-pencil</v-icon>
-                          </v-btn>
-                        </v-row>
-                        <v-row justify="center">
-                          <v-btn @click="deleteSlide(index)" class="my-2" x-small color="red" outlined>削除<v-icon small>mdi-trash-can</v-icon>
-                          </v-btn>
-                        </v-row>
-                      </v-col>
-                      <v-col class="py-2">
-                        <v-icon class="handle">mdi-drag-horizontal-variant</v-icon>
-                      </v-col>
+                <p class="mb-0" style="font-family: Courier">{{ index + 1 }}</p>
+                <v-divider></v-divider>
+                <v-row align="center">
+                  <v-col class="pb-0">
+                    <v-img :src="item.slideImage" width="150" height="100" contain class="my-2"></v-img>
+                  </v-col>
+                  <v-col>
+                    <v-row justify="center">
+                      <v-btn @click="slideDialogSwitch(item)" class="my-2" x-small color="primary" outlined>編集<v-icon small>mdi-pencil</v-icon>
+                      </v-btn>
+                    </v-row>
+                    <v-row justify="center">
+                      <v-btn @click="deleteSlide(index)" class="my-2" x-small color="red" outlined>削除<v-icon small>mdi-trash-can</v-icon>
+                      </v-btn>
                     </v-row>
                   </v-col>
-                </draggable>
-                <!-- </v-row> -->
-              </v-card>
-              <v-btn fixed class="ok-btn" @click="isSlideSort = false" color="primary">OK</v-btn>
-              </div>
-            </v-dialog>
-            <!-- slide編集 -->
-            <v-dialog
-              v-if="currentSlide"
-              v-model="slideDialog"
-              height="500"
-              width="600"
-              overlay-opacity="5"
-            >
-              <v-row align="center" justify="center" class="mx-0">
-                <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})` }">
-                  <v-overlay
-                    class="overlays"
-                    :absolute="absolute"
-                    :value="slideDialog"
-                  >
-                    <p>編集</p>
-                    <v-textarea
-                      class="textarea"
-                      v-model="currentSlide.text"
-                      label="テキストを入力"
-                      outlined
-                      filled
-                      shaped
-                      rounded
-                      no-resize
-                    ></v-textarea>
-                    <v-text-field
-                      v-model="currentSlide.url"
-                      label="URL"
-                      type="url"
-                      outlined
-                      dense
-                      rounded
-                      hint="http(s)://〜入力してください"
-                      persistent-hint
-                      :rules="urlRules"
-                    ></v-text-field>
-                    <v-btn @click="slideDialog = false" color="primary">OK</v-btn>
-                  </v-overlay>
-                </v-card>
-              </v-row>
-            </v-dialog>
-              <v-btn class="mb-5" @click="addSlideDialog=true" small color="primary">
-                追加する<v-icon x-small>mdi-plus</v-icon>
-              </v-btn>
-              <v-btn class="mb-5" @click="isSlideSort=true" small>
-                編集<v-icon x-small>mdi-pencil</v-icon>
-              </v-btn>
-              <br>
-              <!-- スライド追加dialog -->
-              <v-dialog
-                v-model="addSlideDialog"
-                height="auto"
-                width="600"
+                  <v-col class="py-2">
+                    <v-icon class="handle">mdi-drag-horizontal-variant</v-icon>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </draggable>
+            <!-- </v-row> -->
+          </v-card>
+          <v-btn fixed class="ok-btn" @click="isSlideSort = false" color="primary">OK</v-btn>
+          </div>
+        </v-dialog>
+        <!-- slide編集 -->
+        <v-dialog
+          v-if="currentSlide"
+          v-model="slideDialog"
+          height="500"
+          width="600"
+          overlay-opacity="5"
+        >
+          <v-row align="center" justify="center" class="mx-0">
+            <v-card height="500" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})` }">
+              <v-overlay
+                class="overlays"
+                :absolute="absolute"
+                :value="slideDialog"
               >
-                <v-card class="pa-4" width="600" align="center" justify="center" rounded="xl">
-                  <v-app-bar flat height="20" color="rgba(255, 255, 255, 0)">
-                    <v-spacer></v-spacer>
-                    <v-icon @click="addSlideDialog=false" right>mdi-close</v-icon>
-                  </v-app-bar>
-                  <v-form class="textareas" ref="slideform" v-model="formSlide">
-                    <v-chip x-small outlined>Preview</v-chip>
-                    <v-card class="mb-8" width="200" height="200" flat>
-                      <v-img v-show="this.slideImage" :src="slideImage" class="mx-auto" height="200" max-width="200" contain></v-img>
-                      <div v-show="!this.slideImage">
-                        <v-img width="200" :src="require('@/assets/preimage.png')">
-                        </v-img>
-                        <p class="caption">ここに画像が表示されます</p>
-                      </div>
-                    </v-card>
-                    <v-file-input v-if="view" type="file" @change="uploadFile" accept="image/*" show-size small-chips label="画像を選択" :clearable="false" dense :rules="imagerules"></v-file-input>
-                    <v-text-field
-                      v-model="slideUrl"
-                      label="URLを入力（あれば）"
-                      type="url"
-                      outlined
-                      dense
-                      rounded
-                      hint="http(s)://〜入力してください"
-                      persistent-hint
-                      :rules="urlRules"
-                    ></v-text-field>
-                    <v-textarea
-                      class="textareas"
-                      v-model="slideText"
-                      label="テキストを入力"
-                      outlined
-                      shaped
-                      rounded
-                      no-resize
-                      height="100"
-                    ></v-textarea>
-                    <v-col class="pt-0">
-                      <v-btn color="primary" @click="addItem" :disabled="!formSlide && !this.slideImage">追加</v-btn>
-                    </v-col>
-                    <v-chip @click="reset" small outlined>reset</v-chip>
-                  </v-form>
-                <!-- <p v-if="!overLength" class="body-2" style="color: red">*最大10枚までアップロード可能です<br>アップロードするにはスライドを削除してください</p> -->
+                <p>編集</p>
+                <v-text-field
+                  class="mt-2"
+                  v-model="currentSlide.title"
+                  label="タイトルを入力（任意）"
+                  type="text"
+                  outlined
+                  dense
+                  rounded
+                ></v-text-field>
+                <v-text-field
+                  v-model="currentSlide.url"
+                  label="URLを入力（任意）"
+                  type="url"
+                  outlined
+                  dense
+                  rounded
+                  hint="http(s)://〜入力してください"
+                  persistent-hint
+                  :rules="urlRules"
+                ></v-text-field>
+                <v-select
+                  class="pt-0 mt-0"
+                  :items="category"
+                  v-model="currentSlide.slideCate"
+                  label="カテゴリーを選択"
+                >
+                </v-select>
+                <v-textarea
+                  class="textareas"
+                  v-model="currentSlide.text"
+                  label="テキストを入力"
+                  outlined
+                  shaped
+                  rounded
+                  no-resize
+                  height="150"
+                ></v-textarea>
+                <v-btn @click="slideDialog = false" color="primary">OK</v-btn>
+              </v-overlay>
+            </v-card>
+          </v-row>
+        </v-dialog>
+          <v-btn class="mb-5" @click="addSlideDialog=true" small color="primary">
+            追加する<v-icon x-small>mdi-plus</v-icon>
+          </v-btn>
+          <v-btn class="mb-5" @click="isSlideSort=true" small>
+            編集<v-icon x-small>mdi-pencil</v-icon>
+          </v-btn>
+          <br>
+          <!-- スライド追加dialog -->
+          <v-dialog
+            v-model="addSlideDialog"
+            height="auto"
+            width="600"
+          >
+            <v-card class="pa-4" width="600" align="center" justify="center" rounded="xl">
+              <v-app-bar flat height="20" color="rgba(255, 255, 255, 0)">
+                <v-spacer></v-spacer>
+                <v-icon @click="addSlideDialog=false" right>mdi-close</v-icon>
+              </v-app-bar>
+              <v-form class="textareas" ref="slideform" v-model="formSlide">
+                <v-chip x-small outlined>Preview</v-chip>
+                <v-card class="mb-8" width="200" height="200" flat>
+                  <v-img v-show="this.slideImage" :src="slideImage" class="mx-auto" height="200" max-width="200" contain></v-img>
+                  <div v-show="!this.slideImage">
+                    <v-img width="200" :src="require('@/assets/preimage.png')">
+                    </v-img>
+                    <p class="caption">ここに画像が表示されます</p>
+                  </div>
                 </v-card>
-              </v-dialog>
+                <p class="caption font-weight-light" align="left" style="color:red">※画像のみ必須</p>
+                <v-file-input v-if="view" type="file" @change="uploadFile" accept="image/*" show-size small-chips label="画像を選択" :clearable="false" dense :rules="imagerules"></v-file-input>
+                <v-text-field
+                  class="mt-2"
+                  v-model="slideTitle"
+                  label="タイトルを入力（任意）"
+                  type="text"
+                  outlined
+                  dense
+                  rounded
+                ></v-text-field>
+                <v-text-field
+                  v-model="slideUrl"
+                  label="URLを入力（任意）"
+                  type="url"
+                  outlined
+                  dense
+                  rounded
+                  hint="http(s)://〜入力してください"
+                  persistent-hint
+                  :rules="urlRules"
+                ></v-text-field>
+                <v-text-field
+                  class="mt-2"
+                  v-model="slideTitle"
+                  label="タイトルを入力（任意）"
+                  type="text"
+                  outlined
+                  dense
+                  rounded
+                ></v-text-field>
+                <v-select
+                  class="pt-0 mt-0"
+                  :items="category"
+                  v-model="selectedCategory"
+                  label="カテゴリーを選択"
+                >
+                </v-select>
+                <v-textarea
+                  class="textareas"
+                  v-model="slideText"
+                  label="テキストを入力"
+                  outlined
+                  shaped
+                  rounded
+                  no-resize
+                  height="150"
+                ></v-textarea>
+                <v-col class="pt-0">
+                  <v-btn color="primary" @click="addItem" :disabled="!formSlide && !this.slideImage">追加</v-btn>
+                </v-col>
+                <v-chip @click="reset" small outlined>reset</v-chip>
+              </v-form>
+            <!-- <p v-if="!overLength" class="body-2" style="color: red">*最大10枚までアップロード可能です<br>アップロードするにはスライドを削除してください</p> -->
+            </v-card>
+          </v-dialog>
         </div>
 
         <v-divider></v-divider>
@@ -668,10 +723,12 @@
 <script>
 import { db,firebase } from '~/plugins/firebase'
 import draggable from 'vuedraggable'
+import VueScrollSnap from "~/components/VueScrollSnap"
 
 export default {
   components: {
-    draggable
+    draggable,
+    VueScrollSnap
   },
   methods: {
     isURL(str) {
@@ -704,8 +761,12 @@ export default {
       this.currentSlide = item
       this.slideDialog = true
     },
+    viewSlideDialogSwitch(item) {
+      this.currentSlide = item
+      this.viewSlideDialog = true
+    },
     addItem() {
-      this.items.push({slideImage: this.slideImage, text: this.slideText, url: this.slideUrl})
+      this.items.push({slideImage: this.slideImage, text: this.slideText, title: this.slideTitle,slideCate: this.selectedCategory, url: this.slideUrl})
       this.reset()
       this.addSlideDialog = false
       this.model = this.items.length -1
@@ -721,8 +782,10 @@ export default {
       this.view = true
       })
     this.slideText = ''
+    this.slideTitle = ''
     this.slideUrl = ''
     this.slideImage = ''
+    this.selectedCategory = ''
     },
     async uploadFile(data) {
       const storageRef = firebase.storage().ref()
@@ -834,7 +897,7 @@ export default {
           theme: this.selectTheme,
           items: this.items,
           loggedInUser: user,
-          })
+        })
       var userId = firebase.auth().currentUser.uid
       this.$router.push(`/${userId}`)
       }
@@ -842,6 +905,8 @@ export default {
   },
   data() {
     return {
+      selectedIndex: null,
+      category: ['Web App', 'Snaps', 'Others'],
       currentSlide: null,
       model: 0,
       swatches: [
@@ -854,6 +919,7 @@ export default {
       overlay: false,
       absolute: true,
       slideDialog: false,
+      viewSlideDialog: false,
       isSlideSort: false,
       addSlideDialog: false,
       isEditable: false,
@@ -863,6 +929,8 @@ export default {
       view: true,
       items: [],
       slideText: '',
+      slideTitle: '',
+      selectedCategory: '',
       slideUrl: '',
       slideImage: '',
       verifyEmail: '',
@@ -905,7 +973,6 @@ export default {
       formSlide: true,
       valid: true,
       urlRules: [
-        (value) => !!value || "必須項目です",
         (value) => this.isURL(value) || "URL形式で入力してください",
       ],
       snsRules: [
@@ -1044,7 +1111,6 @@ export default {
 <style scoped>
 .avatar {
   box-shadow: 0 10px 25px 0 rgba(0, 0, 0, .5);
-  border: 5px solid #fff;
 }
 
 .avatar-top {
@@ -1055,6 +1121,9 @@ export default {
   white-space: pre-wrap;
   word-wrap:break-word;
   /* background-color: aliceblue; */
+}
+.intro-p {
+  line-height: 26px;
 }
 .career-exp {
   white-space: pre-wrap;
@@ -1143,11 +1212,22 @@ export default {
   word-wrap:break-word;
   background-size: cover;
   background-position: center;
-  background-color: 255,255,255, 0.8;
-  background-blend-mode:lighten;
+  background-color: rgba(0,0,0, 0.8);
+  background-blend-mode: darken;
 }
-.slide-text {
-  background-color:#f9f9f9;
+
+.view-slide-dialog{
+  white-space: pre-wrap;
+  word-wrap:break-word;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0,0,0, 0.8);
+  background-blend-mode: darken;
+}
+.view-slide-text {
+  white-space: pre-wrap;
+  word-wrap:break-word;
+  color: #f9f9f9;
 }
 .edit-slides {
   width: 500;

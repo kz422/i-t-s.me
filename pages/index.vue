@@ -32,8 +32,8 @@ export default {
   background-position: center bottom;
   /* background-size: 500px; */
   /* background-position: bottom; */
-  background-color:rgba(255,255,255,0.2);
-  background-blend-mode:lighten;
+  /* background-color:rgba(255,255,255,0.1);
+  background-blend-mode:lighten; */
 }
 .mainm{
   height: 85vh;
@@ -43,7 +43,7 @@ export default {
   background-position: center bottom;
   /* background-size: 500px; */
   /* background-position: bottom; */
-  background-color:rgba(255,255,255,0.2);
-  background-blend-mode:lighten;
+  /* background-color:rgba(255,255,255,0.2);
+  background-blend-mode:lighten; */
 }
 </style>

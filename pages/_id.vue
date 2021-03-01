@@ -1,5 +1,5 @@
 <template>
-  <v-container class="px-2">
+  <v-container class="px-1 py-0">
     <Mypage />
   </v-container>
 </template>

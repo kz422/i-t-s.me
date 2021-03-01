@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+require('dotenv').config()
 
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -19,6 +20,14 @@ export default {
   css: [
   ],
 
+  purgeCSS: {
+    whitelist: [
+      'scroll-snap-container',
+      'fullscreen',
+      'horizontal',
+    ]
+  },
+
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     '~plugins/vue-scrollto'
@@ -37,7 +46,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    'nuxt-webfontloader'
+    'nuxt-webfontloader',
+    '@nuxtjs/dotenv'
   ],
   webfontloader: {
     google: {

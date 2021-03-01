@@ -9,7 +9,7 @@
         >
           <v-app-bar class="appbar mt-5" max-width="90%" color="rgba(255, 255, 255, 0)" flat fixed>
             <v-toolbar-title>
-              <h1 class="logo pa-3" @click="dialog = false" style="cursor:pointer">
+              <h1 class="logo pa-3" @click="dialog=false" style="cursor:pointer">
                 <v-img width="100px" :src="require('@/assets/ItsMe_Logo.png')"></v-img>
               </h1>
             </v-toolbar-title>
@@ -21,7 +21,7 @@
           <v-btn class="next-btn" @click="model++" outlined small>
             next
           </v-btn>
-            <v-carousel class="slide" v-model="model" height="auto" hide-delimiters light :show-arrows="false">
+            <v-carousel class="slide" v-model="model" height="auto" hide-delimiters light :show-arrows="false" touchless>
               <!-- <v-banner color="primary">
                 <v-pagination
                   v-model="model"
@@ -66,29 +66,29 @@
         </v-dialog>
 
         <!-- main contents -->
-        <v-col align="center" class="mt-3">
-          <h1>Hello</h1>
-          <h1>It'sMe</h1>
-          <p>手軽にポートフォリオ作成</p>
-          <!-- <p class="mt-5 mb-6">あなたを知ってもらうための１ページ</p> -->
+        <v-col align="center" class="mt-3" style="color:#f9f9f9">
+          <h1 style="line-height:38px">Hello<br>It'sMe!!</h1>
+          <p class="mt-3 mb-2">手軽にポートフォリオ作成</p>
           <p v-if="!isAuthenticated">設定はカンタン、まずはアカウント作成</p>
           <div v-if="!isAuthenticated">
             <v-row justify="center">
               <nuxt-link to="/resister">
-                <v-btn depressed color="red" style="color:#fff" class="mt-4" elevation="10">はじめる</v-btn>
+                <v-btn depressed color="red" style="color:#fff" small rounded>はじめる</v-btn>
               </nuxt-link>
             </v-row>
           </div>
           <div v-if="isAuthenticated">
-            <v-row justify="center" class="mt-4">
+            <v-row justify="center" class="mt-4 body-2">
               <nuxt-link :to="`/${currentUser}`">
-                <v-btn depressed elevation="10">自分の<span class="itsme">It'sMe</span>ページへ</v-btn>
+                <v-btn small rounded depressed style="text-transform: none">
+                  It'sMeページへ
+                </v-btn>
               </nuxt-link>
             </v-row>
           </div>
           <v-col class="mt-16 btn-sample">
             <!-- <nuxt-link to="/samples"> -->
-              <v-btn @click="dialog=true" color="primary" rounded elevation="10">サンプルを見る</v-btn>
+              <v-btn @click="dialog=true" color="primary" rounded elevation="10" small>サンプルを見る</v-btn>
             <!-- </nuxt-link> -->
           </v-col>
         </v-col>

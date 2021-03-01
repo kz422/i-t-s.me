@@ -1,15 +1,17 @@
 <template>
   <div class="container">
-    <v-app-bar class="appbar mt-5" max-width="90%" color="rgba(255, 255, 255, 0)" flat fixed>
+    <v-app-bar class="appbar" max-width="95%" color="rgba(255, 255, 255, 0)" flat>
       <v-toolbar-title>
         <nuxt-link to="/">
           <h1 class="logo pa-3"><v-img width="100px" :src="require('@/assets/ItsMe_Logo.png')"></v-img></h1>
         </nuxt-link>
       </v-toolbar-title>
       <div>
-        
       </div>
       <v-spacer></v-spacer>
+      <!-- <nuxt-link to="/resister">
+        <v-btn depressed color="red" style="color:#fff" small rounded v-if="!isAuthenticated && $route.path === '/'">はじめる</v-btn>
+      </nuxt-link> -->
       <v-icon class="ml-3" @click="drawer = !drawer">mdi-dots-vertical</v-icon>
     </v-app-bar>
       <v-navigation-drawer

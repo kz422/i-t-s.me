@@ -1,6 +1,6 @@
 <template>
   <v-app class="main mainbg">
-    <div align="center" class="mt-12 appbar">
+    <div align="center" class="mt-2 appbar">
       <Appbar />
     </div>
     <nuxt />
