@@ -33,7 +33,6 @@
         </v-btn>
         <nuxt-link to="/login" class="caption">
           <p>ご登録済みの方はこちら</p>
-          <!-- <v-btn depressed style="text-transform: none;" color="primary">ログイン or SNSアカウントでログイン</v-btn> -->
         </nuxt-link>
         <p>{{ createUserErrorMessage }}</p>
         <p class="mb-0 caption">または</p>

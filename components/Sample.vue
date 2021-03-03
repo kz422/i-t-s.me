@@ -15,7 +15,7 @@
       </div>
         <v-main align="center" class="mb-10">
         <div class="mx-4">
-          <v-divider></v-divider>
+          <v-divider v-if="!user.isBackground"></v-divider>
           <div class="top">
             <div class="py-6">
               <v-row>
@@ -41,9 +41,11 @@
                   <p class="body-2 mt-1" v-else>{{ user.birthday }}</p>
                 </v-col>
               </v-row>
-              <v-divider class="my-4"></v-divider>
-              <h5>好きなもの</h5>
-              <v-chip class="body-2 mt-4 mx-1" v-for="favorite in user.favorites" :key="favorite.id">{{ favorite }}</v-chip>
+              <div v-if="user.favorites && user.favorites.length">
+                <v-divider class="my-4"></v-divider>
+                <h5>好きなもの</h5>
+                <v-chip class="body-2 mt-4 mx-1" v-for="favorite in user.favorites" :key="favorite.id">{{ favorite }}</v-chip>
+              </div>
             </div>
           </div>
 
@@ -104,7 +106,7 @@
 
           <div class="links my-10" v-if="this.link && this.link.length">
             <h3 class="mb-2">Links</h3>
-            <v-chip class="mx-1" v-for="url in user.urls" :key="url.id" text-color="blue">
+            <v-chip class="mx-1 my-1" v-for="url in user.urls" :key="url.id" text-color="blue">
               <a :href="`${url.url}`" target="_blank" rel="noov-chipener noreferrer">
                 {{ url.urlName }}
               </a>
@@ -114,75 +116,17 @@
           </div>
         </div>
 
-        <!-- <div v-if="this.items && this.items.length" class="works mx-1">
-          <h3 class="mb-6">Works</h3>
-          <p class="mb-1" style="font-family: Courier">{{ model + 1 }} / {{ items.length }}</p>
-          <v-card
-            max-width="600"
-            class="mx-auto mb-4"
-            color="#f9f9f9"
-          >
-            <v-carousel
-              delimiter-icon="mdi-minus"
-              height="auto"
-              show-arrows-on-hover
-              hide-delimiters
-              continuous
-              v-model="model"
-            >
-              <v-carousel-item
-                v-for="item in items"
-                :key="item.id"
-              >
-                <v-img :src="item.slideImage" contain max-height="500" max-width="600"></v-img>
-                <div class="slide-text">
-                  <p v-if="item.text && item.text.length" class="pt-2 pb-1 px-6 mb-0 caption" style="color: black">
-                    {{ item.text.slice(0, 50) }}
-                    <span v-show="item.text.length > 50">
-                    ...
-                  </span>
-                  </p>
-                  <v-btn v-if="item.text.length > 50" @click="slideDialogSwitch(item)" x-small color="primary" outlined class="mb-2">
-                    詳しく
-                  </v-btn>
-                  <v-col class="py-0">
-                    <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
-                      <v-chip v-if="item.url" class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                    </a>
-                  </v-col>
-                </div>
-              </v-carousel-item>
-            </v-carousel>
-          </v-card>
-          <v-dialog
-            v-model="slideDialog"
-            v-if="currentSlide"
-            height="auto"
-            width="600"
-            overlay-opacity="5"
-            scrollable
-          >
-            <v-row align="center" justify="center" class="mx-0">
-              <v-card height="auto" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})`}">
-                <div>
-                  <v-card-text class="mt-6 body-2" style="font-weight:bold">{{ currentSlide.text }}</v-card-text>
-                  <a :href="`${currentSlide.url}`" target="_blank" rel="noov-chipener noreferrer">
-                    <v-chip v-if="currentSlide.url" class="mt-0 mb-5" small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
-                  </a>
-                </div>
-                <v-btn class="my-4" @click="slideDialog=false" color="primary">OK</v-btn>
-              </v-card>
-            </v-row>
-          </v-dialog>
-        </div> -->
-
-        <div class="works">
+        <div v-if="this.items && this.items.length" class="works">
           <h3 class="mb-2">Works</h3>
-          <v-icon>mdi-gesture-swipe-horizontal</v-icon>
+          <div v-if="this.items.length > 2">
+            <v-icon>mdi-gesture-swipe-horizontal</v-icon>
+            <p class="caption mb-0">Slide</p>
+          </div>
           <vue-scroll-snap :horizontal="true">
             <v-row v-for="(item, index) in items" :key="item.id" justify="center" class="ml-2 mr-2">
-              <v-card max-width="400" height="auto" class="mx-2 my-12" rounded="lg" color="rgba(255 ,255 ,255 ,0.4)" @click="slideDialogSwitch(item)">
+              <v-card max-width="500" max-height="500" class="mx-2 my-12" rounded="lg" color="rgba(255 ,255 ,255 ,0.4)" @click="slideDialogSwitch(item)">
                 <v-img :src="item.slideImage" contain height="250"></v-img>
+                <v-divider class="mt-4 mx-5"></v-divider>
                 <v-card-title v-if="item.title && item.title.length">{{ item.title }}</v-card-title>
                 <v-card-subtitle class="caption" v-if="item.slideCate && item.slideCate.length" align="left">{{ item.slideCate }}</v-card-subtitle>
                 <v-card-text v-if="item.text && index != selectedIndex" class="slide-text caption" align="left">{{ item.text.slice(0, 50) }}<span v-show="item.text.length > 50">...</span></v-card-text>
@@ -191,7 +135,7 @@
                     {{ index === selectedIndex ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
                   </v-icon>
                 </div>
-                <v-card-text align="left" v-if="item.url">
+                <v-card-text class="pt-0" align="left" v-if="item.url">
                   <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
                     <v-chip class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
                   </a>
@@ -204,18 +148,18 @@
             v-model="slideDialog"
             v-if="currentSlide"
             height="auto"
-            width="400"
+            width="600"
             overlay-opacity="5"
             scrollable
           >
             <v-row align="center" justify="center" class="mx-0">
-              <v-card min-height="500" height="auto" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})`}">
+              <v-card min-height="500" height="auto" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})`}" rounded="lg">
                 <v-toolbar color="rgba(0, 0, 0, 0)" short flat dense>
                   <v-spacer></v-spacer>
                   <v-icon class="mt-5" @click="slideDialog=false">mdi-close</v-icon>
                 </v-toolbar>
                 <div class="mx-6">
-                  <v-card-title v-if="currentSlide.title && currentSlide.title.length" class="pb-0">{{ currentSlide.title }}</v-card-title>
+                  <v-card-title v-if="currentSlide.title && currentSlide.title.length" class="pb-0 font-weight-black">{{ currentSlide.title }}</v-card-title>
                   <v-card-subtitle class="caption" v-if="currentSlide.slideCate && currentSlide.slideCate.length" align="left">{{ currentSlide.slideCate }}</v-card-subtitle>
                   <v-card-text class="slide-text caption" align="left">{{ currentSlide.text }}</v-card-text>
                   <a :href="`${currentSlide.url}`" target="_blank" rel="noov-chipener noreferrer">
@@ -320,7 +264,7 @@ export default {
   async mounted() {
     window.addEventListener('scroll', this.handleScroll)
 
-    let userDoc = await db.collection('profs').doc('kazuki_inoue')
+    let userDoc = await db.collection('profs').doc('fa5JvaxMtEce057qLGgGDeL5Oog2')
       userDoc.get()
       .then((doc) => {
         if(doc.exists) {

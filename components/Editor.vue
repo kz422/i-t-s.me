@@ -381,26 +381,6 @@
                 :rules="snsRules"
               >  
               </v-text-field>
-              <!-- <v-text-field
-                prepend-icon="mdi-linkedin"
-                label="LinkedIn"
-                v-model="liUrl"
-                placeholder="URLを入力"
-                outlined
-                dense
-                rounded
-              >  
-              </v-text-field> -->
-              <!-- <v-text-field
-                prepend-icon="mdi-github"
-                label="GitHub"
-                v-model="ghUrl"
-                placeholder="URLを入力"
-                outlined
-                dense
-                rounded
-              >  
-              </v-text-field> -->
             </v-col>
           </v-row>
         </div>
@@ -450,7 +430,10 @@
         <div class="slide my-8">
           <div class="works">
           <h3 class="mb-2">Works</h3>
-          <v-icon>mdi-gesture-swipe-horizontal</v-icon>
+          <div v-if="this.items.length > 2">
+            <v-icon>mdi-gesture-swipe-horizontal</v-icon>
+            <p class="caption mb-0">Slide</p>
+          </div>
           <vue-scroll-snap :horizontal="true">
             <v-row v-for="(item, index) in items" :key="item.id" justify="center" class="ml-2 mr-2">
               <v-card max-width="400" height="auto" class="mx-2 my-12" rounded="lg" color="rgba(255 ,255 ,255 ,0.4)" @click="viewSlideDialogSwitch(item)">
@@ -463,7 +446,7 @@
                     {{ index === selectedIndex ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
                   </v-icon>
                 </div>
-                <v-card-text align="left" v-if="item.url">
+                <v-card-text class="pt-0" align="left" v-if="item.url">
                   <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
                     <v-chip class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
                   </a>
@@ -651,15 +634,6 @@
                   persistent-hint
                   :rules="urlRules"
                 ></v-text-field>
-                <v-text-field
-                  class="mt-2"
-                  v-model="slideTitle"
-                  label="タイトルを入力（任意）"
-                  type="text"
-                  outlined
-                  dense
-                  rounded
-                ></v-text-field>
                 <v-select
                   class="pt-0 mt-0"
                   :items="category"
@@ -715,6 +689,21 @@
           <p class="caption">{{ selectTheme }}</p>
         </div>
         <v-btn class="btn" @click="saveProf" width="70%" v-show="isVerifyEmail">save</v-btn>
+        <v-dialog
+          v-model="afterSave"
+          width="300"
+          persistent
+        >
+          <v-card 
+            align="center"
+            width="300"
+            height="150"
+          >
+            <v-card-text class="pt-6">保存しました。</v-card-text>
+            <v-btn small depressed @click="reloadPage" outlined color="primary">編集を続ける</v-btn>
+            <v-btn small depressed @click="toMypage" outlined color="#C3887D" style="text-transform:none">It'sMeページへ</v-btn>
+          </v-card>
+        </v-dialog>
       </v-main>
     </v-card>
   </v-container>
@@ -731,6 +720,10 @@ export default {
     VueScrollSnap
   },
   methods: {
+    toMypage() {
+      var userId = firebase.auth().currentUser.uid
+      this.$router.push(`/${userId}`)
+    },
     isURL(str) {
       let url;
       try {
@@ -898,15 +891,15 @@ export default {
           items: this.items,
           loggedInUser: user,
         })
-      var userId = firebase.auth().currentUser.uid
-      this.$router.push(`/${userId}`)
+        this.afterSave = true
       }
     }
   },
   data() {
     return {
+      afterSave: false,
       selectedIndex: null,
-      category: ['Web App', 'Snaps', 'Others'],
+      category: ['Web', 'Snap', 'Art','Others'],
       currentSlide: null,
       model: 0,
       swatches: [

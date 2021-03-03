@@ -26,24 +26,14 @@ export default {
 <style scoped>
 .main{
   height: 85vh;
-  /* background: #f9f9f9; */
-  background-image: url("~@/assets/top5.png");
+  background-image: url("~@/assets/top-2.png");
   background-size: cover;
   background-position: center bottom;
-  /* background-size: 500px; */
-  /* background-position: bottom; */
-  /* background-color:rgba(255,255,255,0.1);
-  background-blend-mode:lighten; */
 }
 .mainm{
-  height: 85vh;
-  /* background: #f9f9f9; */
-  background-image: url("~@/assets/top-mobile.png");
+  height: 82vh;
+  background-image: url("~@/assets/top-mobile-2.png");
   background-size: cover;
   background-position: center bottom;
-  /* background-size: 500px; */
-  /* background-position: bottom; */
-  /* background-color:rgba(255,255,255,0.2);
-  background-blend-mode:lighten; */
 }
 </style>

@@ -17,13 +17,15 @@
                 dense
               ></v-text-field>
               <v-text-field
-                type="password"
+                :type="show1 ? 'text' : 'password'"
                 label="パスワードを入力"
                 v-model="password"
                 rounded
                 :rules="[rules.required]"
                 outlined
                 dense
+                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="show1 = !show1"
               ></v-text-field>
             </v-form>
             <v-btn 
@@ -37,12 +39,12 @@
               ログイン
             </v-btn>
             <br>
-            <p>{{ logInErrorMessage }}</p>
+            <p class="body-2 mt-1" style="color:red">{{ logInErrorMessage }}</p>
             <ChangePw v-show="changePw" />
             <v-chip v-show="!changePw" @click="changePw = !changePw" x-small>パスワードをお忘れの場合</v-chip>
             <v-chip v-show="changePw" @click="changePw = false" x-small>しまう</v-chip>
             <nuxt-link to="resister">
-              <p class="caption mb-1 mt-2" v-if="unuser">アカウントをお持ちではないですか？</p>
+              <p class="caption mb-1 mt-2">アカウントをお持ちではないですか？</p>
             </nuxt-link>
           </v-col>
           <!-- モバイル表示 -->
@@ -116,6 +118,7 @@ export default {
   },
   data() {
     return {
+      show1: false,
       overlay: true,
       email: '',
       password: '',

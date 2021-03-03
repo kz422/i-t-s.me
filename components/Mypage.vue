@@ -87,7 +87,7 @@
       </div>
         <v-main align="center" class="mb-10">
         <div class="mx-4">
-          <v-divider></v-divider>
+          <v-divider v-if="!user.isBackground"></v-divider>
           <div class="top">
             <div class="py-6">
               <v-row>
@@ -113,9 +113,11 @@
                   <p class="body-2 mt-1" v-else>{{ user.birthday }}</p>
                 </v-col>
               </v-row>
-              <v-divider class="my-4"></v-divider>
-              <h5>好きなもの</h5>
-              <v-chip class="body-2 mt-4 mx-1" v-for="favorite in user.favorites" :key="favorite.id">{{ favorite }}</v-chip>
+              <div v-if="user.favorites && user.favorites.length">
+                <v-divider class="my-4"></v-divider>
+                <h5>好きなもの</h5>
+                <v-chip class="body-2 mt-4 mx-1" v-for="favorite in user.favorites" :key="favorite.id">{{ favorite }}</v-chip>
+              </div>
             </div>
           </div>
 
@@ -205,7 +207,7 @@
                     {{ index === selectedIndex ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
                   </v-icon>
                 </div>
-                <v-card-text align="left" v-if="item.url">
+                <v-card-text class="pt-0" align="left" v-if="item.url">
                   <a :href="`${item.url}`" target="_blank" rel="noov-chipener noreferrer">
                     <v-chip class="my-0" x-small>Link<v-icon x-small>mdi-open-in-new</v-icon></v-chip>
                   </a>
@@ -213,7 +215,7 @@
               </v-card>
             </v-row>
           </vue-scroll-snap>
-
+          <!-- card開いた時 -->
           <v-dialog
             v-model="slideDialog"
             v-if="currentSlide"
@@ -221,6 +223,7 @@
             width="600"
             overlay-opacity="5"
             scrollable
+            content-class="mx-2"
           >
             <v-row align="center" justify="center" class="mx-0">
               <v-card min-height="500" height="auto" width="600" dark align="center" class="slide-dialog px-0" :style="{ backgroundImage: `url(${currentSlide.slideImage})`}" rounded="lg">
@@ -228,7 +231,7 @@
                   <v-spacer></v-spacer>
                   <v-icon class="mt-5" @click="slideDialog=false">mdi-close</v-icon>
                 </v-toolbar>
-                <div class="mx-6">
+                <div class="mx-3">
                   <v-card-title v-if="currentSlide.title && currentSlide.title.length" class="pb-0 font-weight-black">{{ currentSlide.title }}</v-card-title>
                   <v-card-subtitle class="caption" v-if="currentSlide.slideCate && currentSlide.slideCate.length" align="left">{{ currentSlide.slideCate }}</v-card-subtitle>
                   <v-card-text class="slide-text caption" align="left">{{ currentSlide.text }}</v-card-text>
@@ -348,6 +351,9 @@ export default {
           if(this.user.imageUrl){
             this.imageUrl = this.user.imageUrl
           }
+        }else {
+          alert('ユーザー情報がありません。ホームへ戻ります。')
+          this.$router.push('/')
         }
       })
   },

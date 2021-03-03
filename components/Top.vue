@@ -29,33 +29,34 @@
               </v-banner> -->
               <!-- <v-carousel-item></v-carousel-item> -->
               <v-carousel-item class="about pt-8">
-                <h2 class="mb-4" style="font-family:'Oleo Script'">Welcome</h2>
-                <p class="body-2">It'Meへようこそ。</p>
-                <p class="body-2">It'Meでは、あなたを知ってもらうために</p>
-                <p class="body-2">「ホームページを作るまでもない」</p>
-                <p class="body-2">「そもそもどうやって作ればよいか分からない」</p>
-                <p class="body-2">「手軽にポートフォリオを作成したい」</p>
-                <p class="body-2">という方にぴったりのサービスです</p>
-                <p class="body-2">まずは是非、サンプルをご覧ください</p>
-                <h4 style="font-family:'Oleo Script'">Here We Go!!</h4>
+                <div style="color:#31344B">
+                  <h2 class="mb-4" style="font-family:'Oleo Script'">Welcome</h2>
+                  <p class="body-2">It'Meへようこそ。</p>
+                  <p class="body-2">It'Meでは、あなたを知ってもらうために</p>
+                  <p class="body-2">「ホームページを作るまでもない」</p>
+                  <p class="body-2">「そもそもどうやって作ればよいか分からない」</p>
+                  <p class="body-2">「手軽にポートフォリオを作成したい」</p>
+                  <p class="body-2">という方にぴったりのサービスです</p>
+                  <p class="body-2">まずは是非、サンプルをご覧ください</p>
+                  <h4 style="font-family:'Oleo Script'">Here We Go!!</h4>
+                </div>
                 <v-icon @click="model++">mdi-chevron-double-right</v-icon>
-                <p v-if="$vuetify.breakpoint.smAndDown" class="caption mt-4">スワイプで移動できます</p>
               </v-carousel-item>
               <v-carousel-item>
-                <h3 style="color:#333">Inoue(開発者)のページ</h3>
+                <h4 class="mb-2" style="font-family:Oleo Script">Sample-1</h4>
                 <Sample class="mx-auto px-2"/>
               </v-carousel-item>
               <v-carousel-item>
-                <h3>Johnさんのページ</h3>
+                <h4 class="mb-2" style="font-family:Oleo Script">Sample-2</h4>
                 <Sample2 class="mx-auto px-2"/>
               </v-carousel-item>
               <v-carousel-item>
-                <h3>Janeさんのページ</h3>
+                <h4 class="mb-2" style="font-family:Oleo Script">Sample-3</h4>
                 <Sample3 class="mx-auto px-2"/>
               </v-carousel-item>
               <v-carousel-item>
-                <h3>編集画面のサンプルページ</h3>
-                <p class="caption mb-0">＊保存はできません</p>
+                <h4>編集画面のサンプルページ</h4>
+                <p class="caption mb-0" style="color:red">＊保存はできません</p>
                 <SampleEdit class="mx-auto px-2"/>
               </v-carousel-item>
             </v-carousel>
@@ -177,7 +178,9 @@ export default {
   /* background: linear-gradient(270deg, #000080, #bbbbe3, #e05c30);
   background-size: 600% 600%; */
 }
-
+.slide >>> h4 {
+  color: #31344B;
+}
 .prev-btn {
   top: 70%;
   left: 5%;
